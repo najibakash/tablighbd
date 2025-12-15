@@ -9,68 +9,80 @@
                     this.classList.add('is-loaded');
                 }, false);
             }
-        }</script><script>document.addEventListener('DOMContentLoaded', function() {
-    // 1. Find the search input field in your theme
-    // Note: 'js-search-input' is a common class in Publii themes. 
-    // If your theme uses a different class, inspect your site and update this selector.
-    const searchInput = document.querySelector('.js-search-input') || document.querySelector('input[type="search"]');
-    const searchResultsContainer = document.createElement('div');
+        }</script><div id="manual-search-overlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:9999; justify-content:center; align-items:start; padding-top:100px;"><div style="background:white; padding:20px; width:90%; max-width:600px; border-radius:8px; position:relative;"><button id="close-search" style="position:absolute; right:10px; top:10px; background:none; border:none; font-size:20px; cursor:pointer;">&times;</button> <input type="text" id="manual-search-input" placeholder="Search here..." style="width:100%; padding:15px; font-size:18px; border:1px solid #ddd; border-radius:4px; margin-bottom:15px;"><div id="manual-search-results" style="max-height:400px; overflow-y:auto;"></div></div></div><script>document.addEventListener('DOMContentLoaded', function() {
+    // 1. SELECTORS
+    // Try to find the search icon using common Publii theme classes
+    const searchIcon = document.querySelector('.js-search-btn') || 
+                       document.querySelector('[aria-label="Search"]') || 
+                       document.querySelector('.icon-search').parentNode;
     
-    if (!searchInput) return; // Exit if no search bar found
+    const overlay = document.getElementById('manual-search-overlay');
+    const closeBtn = document.getElementById('close-search');
+    const input = document.getElementById('manual-search-input');
+    const resultsContainer = document.getElementById('manual-search-results');
+    let feedData = null;
 
-    // Style the results container (Customize this CSS as needed)
-    searchResultsContainer.id = 'manual-search-results';
-    searchResultsContainer.style.cssText = 'position:absolute; background:white; width:100%; max-height:300px; overflow-y:auto; box-shadow:0 4px 6px rgba(0,0,0,0.1); z-index:1000; display:none;';
-    searchInput.parentNode.appendChild(searchResultsContainer);
-
-    let feedData = [];
-
-    // 2. Fetch the content feed
-    fetch('/feed.json')
-        .then(response => response.json())
-        .then(data => {
-            feedData = data.items; // JSON Feed standard uses 'items' array
-        })
-        .catch(err => console.error('Error loading search feed:', err));
-
-    // 3. Listen for typing
-    searchInput.addEventListener('input', function(e) {
-        const query = e.target.value.toLowerCase();
-        searchResultsContainer.innerHTML = '';
+    // 2. OPEN SEARCH
+    if (searchIcon) {
+        // Remove existing theme events (clone the node) to prevent conflicts
+        const newIcon = searchIcon.cloneNode(true);
+        searchIcon.parentNode.replaceChild(newIcon, searchIcon);
         
-        if (query.length < 3) {
-            searchResultsContainer.style.display = 'none';
-            return;
-        }
+        newIcon.addEventListener('click', function(e) {
+            e.preventDefault();
+            overlay.style.display = 'flex';
+            input.focus();
+            
+            // Load data only when opened (optimization)
+            if (!feedData) {
+                fetch('/feed.json')
+                    .then(res => res.json())
+                    .then(data => { feedData = data.items; })
+                    .catch(err => { resultsContainer.innerHTML = '<p>Error loading search data.</p>'; });
+            }
+        });
+    } else {
+        console.log("Custom Search: Could not find the search icon in your theme.");
+    }
 
-        // 4. Filter results
+    // 3. CLOSE SEARCH
+    function closeSearch() {
+        overlay.style.display = 'none';
+        input.value = '';
+        resultsContainer.innerHTML = '';
+    }
+    closeBtn.addEventListener('click', closeSearch);
+    overlay.addEventListener('click', function(e) {
+        if (e.target === overlay) closeSearch();
+    });
+    document.addEventListener('keydown', function(e) {
+        if (e.key === "Escape") closeSearch();
+    });
+
+    // 4. PERFORM SEARCH
+    input.addEventListener('input', function(e) {
+        const query = e.target.value.toLowerCase();
+        resultsContainer.innerHTML = '';
+
+        if (query.length < 2 || !feedData) return;
+
         const results = feedData.filter(item => {
             return (item.title && item.title.toLowerCase().includes(query)) || 
                    (item.content_text && item.content_text.toLowerCase().includes(query));
         });
 
-        // 5. Display results
         if (results.length > 0) {
-            searchResultsContainer.style.display = 'block';
             results.forEach(item => {
                 const link = document.createElement('a');
                 link.href = item.url;
-                link.textContent = item.title;
-                link.style.cssText = 'display:block; padding:10px; text-decoration:none; border-bottom:1px solid #eee; color:#333;';
-                link.onmouseover = function() { this.style.backgroundColor = '#f9f9f9'; };
-                link.onmouseout = function() { this.style.backgroundColor = 'white'; };
-                searchResultsContainer.appendChild(link);
+                link.innerHTML = `<strong style="font-size:16px;">${item.title}</strong><br><span style="font-size:14px; color:#666;">${item.summary || 'Click to read more...'}</span>`;
+                link.style.cssText = 'display:block; padding:10px; border-bottom:1px solid #eee; text-decoration:none; color:#333;';
+                link.onmouseover = function() { this.style.background = '#f5f5f5'; };
+                link.onmouseout = function() { this.style.background = 'transparent'; };
+                resultsContainer.appendChild(link);
             });
         } else {
-            searchResultsContainer.style.display = 'block';
-            searchResultsContainer.innerHTML = '<div style="padding:10px;">No results found</div>';
-        }
-    });
-
-    // Close results when clicking outside
-    document.addEventListener('click', function(e) {
-        if (!searchInput.contains(e.target) && !searchResultsContainer.contains(e.target)) {
-            searchResultsContainer.style.display = 'none';
+            resultsContainer.innerHTML = '<p style="padding:10px; color:#666;">No results found.</p>';
         }
     });
 });</script><script src="https://najibakash.github.io/tablighbd/media/plugins/pagePrefetching/quicklink.umd.js"></script><script>window.addEventListener('load', () => {
