@@ -9,10 +9,13 @@
                     this.classList.add('is-loaded');
                 }, false);
             }
-        }</script><div id="manual-search-overlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:9999; justify-content:center; align-items:start; padding-top:100px;"><div style="background:white; padding:20px; width:90%; max-width:600px; border-radius:8px; position:relative;"><button id="close-search" style="position:absolute; right:10px; top:10px; background:none; border:none; font-size:20px; cursor:pointer;">&times;</button> <input type="text" id="manual-search-input" placeholder="Search here..." style="width:100%; padding:15px; font-size:18px; border:1px solid #ddd; border-radius:4px; margin-bottom:15px;"><div id="manual-search-results" style="max-height:400px; overflow-y:auto;"></div></div></div><script>document.addEventListener('DOMContentLoaded', function() {
+        }</script><div id="manual-search-overlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:9999; justify-content:center; align-items:start; padding-top:100px;"><div style="background:white; padding:20px; width:90%; max-width:600px; border-radius:8px; position:relative;"><button id="close-search" style="position:absolute; right:10px; top:10px; background:none; border:none; font-size:20px; cursor:pointer;">&times;</button> <input type="text" id="manual-search-input" placeholder="Search here..." style="width:100%; padding:15px; font-size:18px; border:1px solid #ddd; border-radius:4px; margin-bottom:15px;"><div id="manual-search-results" style="max-height:400px; overflow-y:auto;"></div><div id="search-debug-info" style="font-size:12px; color:#999; margin-top:10px; display:none;"></div></div></div><script>document.addEventListener('DOMContentLoaded', function() {
     // --- CONFIGURATION ---
-    // We added your folder name '/tablighbd/' here so it finds the file correctly
-    const FEED_URL = '/tablighbd/feed.json'; 
+    // If testing on Localhost (Preview), use '/feed.json'
+    // If on GitHub Pages, use '/tablighbd/feed.json'
+    // This logic tries to detect automatically:
+    const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+    const FEED_URL = isLocal ? '/feed.json' : '/tablighbd/feed.json'; 
     // ---------------------
 
     const searchIcon = document.querySelector('.js-search-btn') || 
@@ -23,7 +26,8 @@
     const closeBtn = document.getElementById('close-search');
     const input = document.getElementById('manual-search-input');
     const resultsContainer = document.getElementById('manual-search-results');
-    let feedData = null;
+    const debugInfo = document.getElementById('search-debug-info');
+    let feedData = [];
 
     if (searchIcon) {
         const newIcon = searchIcon.cloneNode(true);
@@ -34,16 +38,22 @@
             overlay.style.display = 'flex';
             input.focus();
             
-            if (!feedData) {
+            // Fetch data
+            if (feedData.length === 0) {
                 fetch(FEED_URL)
                     .then(res => {
-                        if (!res.ok) throw new Error("File not found");
+                        if (!res.ok) throw new Error("Status: " + res.status);
                         return res.json();
                     })
-                    .then(data => { feedData = data.items; })
+                    .then(data => { 
+                        feedData = data.items;
+                        console.log("Search Data Loaded:", feedData); // Check Console (F12) to see data
+                        debugInfo.innerHTML = `Loaded ${feedData.length} items from ${FEED_URL}`;
+                        debugInfo.style.display = 'block';
+                    })
                     .catch(err => { 
                         console.error(err);
-                        resultsContainer.innerHTML = '<p style="color:red; padding:10px;">Error: Could not find <b>feed.json</b>. <br>1. Check if "JSON Feed" is enabled in Site Settings.<br>2. Check if the URL is correct: ' + FEED_URL + '</p>'; 
+                        resultsContainer.innerHTML = `<p style="color:red;">Error loading feed.<br>Tried: ${FEED_URL}<br>Check Console (F12) for details.</p>`; 
                     });
             }
         });
@@ -55,36 +65,43 @@
         resultsContainer.innerHTML = '';
     }
     closeBtn.addEventListener('click', closeSearch);
-    overlay.addEventListener('click', function(e) {
-        if (e.target === overlay) closeSearch();
-    });
-    document.addEventListener('keydown', function(e) {
-        if (e.key === "Escape") closeSearch();
-    });
+    overlay.addEventListener('click', function(e) { if (e.target === overlay) closeSearch(); });
+    document.addEventListener('keydown', function(e) { if (e.key === "Escape") closeSearch(); });
 
     input.addEventListener('input', function(e) {
         const query = e.target.value.toLowerCase();
         resultsContainer.innerHTML = '';
 
-        if (query.length < 2 || !feedData) return;
+        if (query.length < 2) return;
+
+        if (feedData.length === 0) {
+            resultsContainer.innerHTML = '<p>Loading data...</p>';
+            return;
+        }
 
         const results = feedData.filter(item => {
-            return (item.title && item.title.toLowerCase().includes(query)) || 
-                   (item.content_text && item.content_text.toLowerCase().includes(query));
+            // SAFE SEARCH LOGIC
+            const title = item.title ? item.title.toLowerCase() : '';
+            const summary = item.summary ? item.summary.toLowerCase() : '';
+            // Strip HTML tags from content to search body text
+            const content = item.content_html ? item.content_html.replace(/<[^>]*>?/gm, '').toLowerCase() : '';
+            
+            return title.includes(query) || summary.includes(query) || content.includes(query);
         });
 
         if (results.length > 0) {
             results.forEach(item => {
                 const link = document.createElement('a');
                 link.href = item.url;
-                link.innerHTML = `<strong style="font-size:16px;">${item.title}</strong><br><span style="font-size:14px; color:#666;">${item.summary || 'Read more...'}</span>`;
-                link.style.cssText = 'display:block; padding:10px; border-bottom:1px solid #eee; text-decoration:none; color:#333;';
-                link.onmouseover = function() { this.style.background = '#f5f5f5'; };
+                // Highlight matches?
+                link.innerHTML = `<strong style="font-size:16px; color:#2196f3;">${item.title}</strong><br><span style="font-size:13px; color:#666;">${item.summary || 'Read article...'}</span>`;
+                link.style.cssText = 'display:block; padding:12px; border-bottom:1px solid #eee; text-decoration:none; color:#333; transition:0.2s;';
+                link.onmouseover = function() { this.style.background = '#f9f9f9'; };
                 link.onmouseout = function() { this.style.background = 'transparent'; };
                 resultsContainer.appendChild(link);
             });
         } else {
-            resultsContainer.innerHTML = '<p style="padding:10px; color:#666;">No results found.</p>';
+            resultsContainer.innerHTML = '<p style="padding:10px; color:#666;">No results found for "' + e.target.value + '"</p>';
         }
     });
 });</script></body></html>
