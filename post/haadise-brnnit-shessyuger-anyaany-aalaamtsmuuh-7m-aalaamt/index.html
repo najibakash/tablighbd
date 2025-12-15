@@ -9,26 +9,36 @@
                     this.classList.add('is-loaded');
                 }, false);
             }
-        }</script><div id="manual-search-overlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:9999; justify-content:center; align-items:start; padding-top:100px;"><div style="background:white; padding:20px; width:90%; max-width:600px; border-radius:8px; position:relative;"><button id="close-search" style="position:absolute; right:10px; top:10px; background:none; border:none; font-size:20px; cursor:pointer;">&times;</button> <input type="text" id="manual-search-input" placeholder="Search here..." style="width:100%; padding:15px; font-size:18px; border:1px solid #ddd; border-radius:4px; margin-bottom:15px;"><div id="manual-search-results" style="max-height:400px; overflow-y:auto;"></div><div id="search-debug-info" style="font-size:12px; color:#999; margin-top:10px; display:none;"></div></div></div><script>document.addEventListener('DOMContentLoaded', function() {
-    // --- CONFIGURATION ---
-    // If testing on Localhost (Preview), use '/feed.json'
-    // If on GitHub Pages, use '/tablighbd/feed.json'
-    // This logic tries to detect automatically:
+        }</script><div id="bengali-search-overlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:99999; justify-content:center; align-items:start; padding-top:80px; backdrop-filter: blur(5px);"><div style="background:white; padding:25px; width:95%; max-width:700px; border-radius:12px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); position:relative; display:flex; flex-direction:column; max-height:80vh;"><div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;"><h3 style="margin:0; font-family: sans-serif; color:#333;">অনুসন্ধান করুন</h3><button id="close-bn-search" style="background:#f1f1f1; border:none; width:35px; height:35px; border-radius:50%; font-size:20px; cursor:pointer; display:flex; align-items:center; justify-content:center;">&times;</button></div><input type="text" id="bn-search-input" placeholder="এখানে লিখুন..." style="width:100%; padding:15px; font-size:18px; border:2px solid #eee; border-radius:8px; outline:none; font-family: inherit;"><div id="bn-search-status" style="font-size:13px; color:#888; margin-top:8px; display:none;">লোডিং...</div><div id="bn-search-results" style="overflow-y:auto; margin-top:15px; padding-right:5px; flex-grow:1;"></div></div></div><script>document.addEventListener('DOMContentLoaded', function() {
+    // --- SETTINGS ---
+    // Detect if we are on localhost or GitHub Pages to set the correct path
     const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+    // CHANGE '/tablighbd/' IF YOUR REPO NAME IS DIFFERENT
     const FEED_URL = isLocal ? '/feed.json' : '/tablighbd/feed.json'; 
-    // ---------------------
+    // ----------------
 
+    // Selectors
     const searchIcon = document.querySelector('.js-search-btn') || 
                        document.querySelector('[aria-label="Search"]') || 
-                       document.querySelector('.icon-search').parentNode;
+                       document.querySelector('.icon-search')?.parentNode;
     
-    const overlay = document.getElementById('manual-search-overlay');
-    const closeBtn = document.getElementById('close-search');
-    const input = document.getElementById('manual-search-input');
-    const resultsContainer = document.getElementById('manual-search-results');
-    const debugInfo = document.getElementById('search-debug-info');
+    const overlay = document.getElementById('bengali-search-overlay');
+    const closeBtn = document.getElementById('close-bn-search');
+    const input = document.getElementById('bn-search-input');
+    const resultsDiv = document.getElementById('bn-search-results');
+    const statusDiv = document.getElementById('bn-search-status');
+    
     let feedData = [];
+    let isDataLoaded = false;
 
+    // Helper: Normalize Bengali Text (Fixes broken unicode matching)
+    function normalizeText(text) {
+        if (!text) return "";
+        // NFKC normalization combines separate character parts into whole letters
+        return text.normalize('NFKC').toLowerCase().trim();
+    }
+
+    // Open Search Logic
     if (searchIcon) {
         const newIcon = searchIcon.cloneNode(true);
         searchIcon.parentNode.replaceChild(newIcon, searchIcon);
@@ -36,72 +46,82 @@
         newIcon.addEventListener('click', function(e) {
             e.preventDefault();
             overlay.style.display = 'flex';
+            document.body.style.overflow = 'hidden'; // Stop background scrolling
             input.focus();
             
-            // Fetch data
-            if (feedData.length === 0) {
+            if (!isDataLoaded) {
+                statusDiv.style.display = 'block';
+                statusDiv.innerText = 'ডাটা লোড হচ্ছে...'; // Loading data...
+                
                 fetch(FEED_URL)
                     .then(res => {
-                        if (!res.ok) throw new Error("Status: " + res.status);
+                        if (!res.ok) throw new Error("Feed not found");
                         return res.json();
                     })
                     .then(data => { 
                         feedData = data.items;
-                        console.log("Search Data Loaded:", feedData); // Check Console (F12) to see data
-                        debugInfo.innerHTML = `Loaded ${feedData.length} items from ${FEED_URL}`;
-                        debugInfo.style.display = 'block';
+                        isDataLoaded = true;
+                        statusDiv.innerText = `মোট ${feedData.length} টি পোস্ট ইনডেক্স করা হয়েছে`; // Total X posts indexed
                     })
                     .catch(err => { 
                         console.error(err);
-                        resultsContainer.innerHTML = `<p style="color:red;">Error loading feed.<br>Tried: ${FEED_URL}<br>Check Console (F12) for details.</p>`; 
+                        statusDiv.innerHTML = `<span style="color:red;">ত্রুটি: ডাটা লোড করা যায়নি। (Error loading data)</span>`;
                     });
             }
         });
     }
 
+    // Close Functions
     function closeSearch() {
         overlay.style.display = 'none';
+        document.body.style.overflow = 'auto';
         input.value = '';
-        resultsContainer.innerHTML = '';
+        resultsDiv.innerHTML = '';
+        statusDiv.style.display = 'none';
     }
     closeBtn.addEventListener('click', closeSearch);
-    overlay.addEventListener('click', function(e) { if (e.target === overlay) closeSearch(); });
-    document.addEventListener('keydown', function(e) { if (e.key === "Escape") closeSearch(); });
+    overlay.addEventListener('click', (e) => { if (e.target === overlay) closeSearch(); });
+    document.addEventListener('keydown', (e) => { if (e.key === "Escape") closeSearch(); });
 
+    // The Search Logic
     input.addEventListener('input', function(e) {
-        const query = e.target.value.toLowerCase();
-        resultsContainer.innerHTML = '';
+        const rawQuery = e.target.value;
+        const query = normalizeText(rawQuery);
+        
+        resultsDiv.innerHTML = '';
 
-        if (query.length < 2) return;
+        if (query.length < 2) return; // Wait for 2 chars
+        if (!isDataLoaded) return;
 
-        if (feedData.length === 0) {
-            resultsContainer.innerHTML = '<p>Loading data...</p>';
-            return;
-        }
-
-        const results = feedData.filter(item => {
-            // SAFE SEARCH LOGIC
-            const title = item.title ? item.title.toLowerCase() : '';
-            const summary = item.summary ? item.summary.toLowerCase() : '';
-            // Strip HTML tags from content to search body text
-            const content = item.content_html ? item.content_html.replace(/<[^>]*>?/gm, '').toLowerCase() : '';
+        // FILTER: Check Title OR Content
+        const matches = feedData.filter(item => {
+            const title = normalizeText(item.title);
+            // Strip HTML tags from content for cleaner search
+            const content = normalizeText(item.content_html || item.content_text || "").replace(/<[^>]*>?/gm, '');
             
-            return title.includes(query) || summary.includes(query) || content.includes(query);
+            return title.includes(query) || content.includes(query);
         });
 
-        if (results.length > 0) {
-            results.forEach(item => {
-                const link = document.createElement('a');
-                link.href = item.url;
-                // Highlight matches?
-                link.innerHTML = `<strong style="font-size:16px; color:#2196f3;">${item.title}</strong><br><span style="font-size:13px; color:#666;">${item.summary || 'Read article...'}</span>`;
-                link.style.cssText = 'display:block; padding:12px; border-bottom:1px solid #eee; text-decoration:none; color:#333; transition:0.2s;';
-                link.onmouseover = function() { this.style.background = '#f9f9f9'; };
-                link.onmouseout = function() { this.style.background = 'transparent'; };
-                resultsContainer.appendChild(link);
+        // RENDER RESULTS
+        if (matches.length > 0) {
+            matches.forEach(item => {
+                const el = document.createElement('a');
+                el.href = item.url;
+                el.style.cssText = 'display:block; padding:15px; border-bottom:1px solid #f0f0f0; text-decoration:none; color:#333; transition:0.2s;';
+                el.onmouseover = () => el.style.background = '#f9f9f9';
+                el.onmouseout = () => el.style.background = 'transparent';
+                
+                // Highlight matches in title
+                const titleDisplay = item.title; 
+                
+                el.innerHTML = `
+                    <div style="font-size:18px; font-weight:bold; color:#d32f2f; margin-bottom:5px;">${titleDisplay}</div>
+                    <div style="font-size:14px; color:#666;">${item.summary || 'বিস্তারিত পড়ুন...'}</div>
+                `;
+                resultsDiv.appendChild(el);
             });
         } else {
-            resultsContainer.innerHTML = '<p style="padding:10px; color:#666;">No results found for "' + e.target.value + '"</p>';
+            resultsDiv.innerHTML = '<div style="text-align:center; padding:20px; color:#999;">কোন ফলাফল পাওয়া যায়নি (No results found)</div>';
         }
     });
 });</script></body></html>
