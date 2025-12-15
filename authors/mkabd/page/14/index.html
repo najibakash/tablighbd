@@ -10,8 +10,11 @@
                 }, false);
             }
         }</script><div id="manual-search-overlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:9999; justify-content:center; align-items:start; padding-top:100px;"><div style="background:white; padding:20px; width:90%; max-width:600px; border-radius:8px; position:relative;"><button id="close-search" style="position:absolute; right:10px; top:10px; background:none; border:none; font-size:20px; cursor:pointer;">&times;</button> <input type="text" id="manual-search-input" placeholder="Search here..." style="width:100%; padding:15px; font-size:18px; border:1px solid #ddd; border-radius:4px; margin-bottom:15px;"><div id="manual-search-results" style="max-height:400px; overflow-y:auto;"></div></div></div><script>document.addEventListener('DOMContentLoaded', function() {
-    // 1. SELECTORS
-    // Try to find the search icon using common Publii theme classes
+    // --- CONFIGURATION ---
+    // We added your folder name '/tablighbd/' here so it finds the file correctly
+    const FEED_URL = '/tablighbd/feed.json'; 
+    // ---------------------
+
     const searchIcon = document.querySelector('.js-search-btn') || 
                        document.querySelector('[aria-label="Search"]') || 
                        document.querySelector('.icon-search').parentNode;
@@ -22,9 +25,7 @@
     const resultsContainer = document.getElementById('manual-search-results');
     let feedData = null;
 
-    // 2. OPEN SEARCH
     if (searchIcon) {
-        // Remove existing theme events (clone the node) to prevent conflicts
         const newIcon = searchIcon.cloneNode(true);
         searchIcon.parentNode.replaceChild(newIcon, searchIcon);
         
@@ -33,19 +34,21 @@
             overlay.style.display = 'flex';
             input.focus();
             
-            // Load data only when opened (optimization)
             if (!feedData) {
-                fetch('/feed.json')
-                    .then(res => res.json())
+                fetch(FEED_URL)
+                    .then(res => {
+                        if (!res.ok) throw new Error("File not found");
+                        return res.json();
+                    })
                     .then(data => { feedData = data.items; })
-                    .catch(err => { resultsContainer.innerHTML = '<p>Error loading search data.</p>'; });
+                    .catch(err => { 
+                        console.error(err);
+                        resultsContainer.innerHTML = '<p style="color:red; padding:10px;">Error: Could not find <b>feed.json</b>. <br>1. Check if "JSON Feed" is enabled in Site Settings.<br>2. Check if the URL is correct: ' + FEED_URL + '</p>'; 
+                    });
             }
         });
-    } else {
-        console.log("Custom Search: Could not find the search icon in your theme.");
     }
 
-    // 3. CLOSE SEARCH
     function closeSearch() {
         overlay.style.display = 'none';
         input.value = '';
@@ -59,7 +62,6 @@
         if (e.key === "Escape") closeSearch();
     });
 
-    // 4. PERFORM SEARCH
     input.addEventListener('input', function(e) {
         const query = e.target.value.toLowerCase();
         resultsContainer.innerHTML = '';
@@ -75,7 +77,7 @@
             results.forEach(item => {
                 const link = document.createElement('a');
                 link.href = item.url;
-                link.innerHTML = `<strong style="font-size:16px;">${item.title}</strong><br><span style="font-size:14px; color:#666;">${item.summary || 'Click to read more...'}</span>`;
+                link.innerHTML = `<strong style="font-size:16px;">${item.title}</strong><br><span style="font-size:14px; color:#666;">${item.summary || 'Read more...'}</span>`;
                 link.style.cssText = 'display:block; padding:10px; border-bottom:1px solid #eee; text-decoration:none; color:#333;';
                 link.onmouseover = function() { this.style.background = '#f5f5f5'; };
                 link.onmouseout = function() { this.style.background = 'transparent'; };
@@ -85,13 +87,4 @@
             resultsContainer.innerHTML = '<p style="padding:10px; color:#666;">No results found.</p>';
         }
     });
-});</script><script src="https://najibakash.github.io/tablighbd/media/plugins/pagePrefetching/quicklink.umd.js"></script><script>window.addEventListener('load', () => {
-					quicklink.listen({
-						prerender: true,
-						el: document.querySelector('body'),
-						delay: 0,
-						limit: Infinity,
-						throttle: Infinity,
-						timeout: 2000
-					});
-				});</script></body></html>
+});</script></body></html>
