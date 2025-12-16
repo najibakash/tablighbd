@@ -9,114 +9,193 @@
                     this.classList.add('is-loaded');
                 }, false);
             }
-        }</script><div id="bengali-search-overlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:99999; justify-content:center; align-items:start; padding-top:80px; backdrop-filter: blur(5px);"><div style="background:white; padding:25px; width:95%; max-width:700px; border-radius:12px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); position:relative; display:flex; flex-direction:column; max-height:80vh;"><div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;"><h3 style="margin:0; font-family: sans-serif; color:#333; font-size: 20px;">অনুসন্ধান</h3><button id="close-bn-search" style="background:#f1f1f1; border:none; width:35px; height:35px; border-radius:50%; font-size:24px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#555;">&times;</button></div><input type="text" id="bn-search-input" placeholder="কি খুঁজতে চান? (যেমন: মাহদী, ঈসা...)" style="width:100%; padding:15px; font-size:18px; border:2px solid #ddd; border-radius:8px; outline:none; box-sizing: border-box;"><div id="bn-search-status" style="font-size:13px; color:#666; margin-top:10px; padding: 5px; background: #f9f9f9; border-radius: 4px; display:none;"></div><div id="bn-search-results" style="overflow-y:auto; margin-top:15px; padding-right:5px; flex-grow:1;"></div></div></div><script>document.addEventListener('DOMContentLoaded', function() {
-    // --- SETTINGS ---
-    // GitHub Pages এর জন্য আপনার ফোল্ডারের নাম ঠিক আছে কি না দেখুন
+        }</script><div id="bengali-search-overlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:99999; justify-content:center; align-items:start; padding-top:60px; backdrop-filter: blur(5px);"><div style="background:white; padding:0; width:95%; max-width:700px; border-radius:12px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); position:relative; display:flex; flex-direction:column; max-height:85vh; overflow:hidden;"><div style="padding:20px 25px; border-bottom:1px solid #eee; background:#f9f9f9;"><div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;"><h3 style="margin:0; font-family: sans-serif; color:#333;">অনুসন্ধান (Search)</h3><button id="close-bn-search" style="background:#e0e0e0; border:none; width:30px; height:30px; border-radius:50%; font-size:20px; cursor:pointer; display:flex; align-items:center; justify-content:center;">&times;</button></div><input type="text" id="bn-search-input" placeholder="আর্টিকেল, ভিডিও বা চ্যাপ্টার খুঁজুন..." style="width:100%; padding:12px; font-size:16px; border:2px solid #ddd; border-radius:6px; outline:none;"></div><div id="bn-search-status" style="font-size:12px; color:#666; padding:5px 25px; background:#fff; border-bottom:1px solid #eee;">...</div><div id="bn-search-results" style="overflow-y:auto; padding:10px 20px; flex-grow:1; background:#fff;"></div></div></div><script>document.addEventListener('DOMContentLoaded', function() {
+    // === FINAL CONFIGURATION ===
+    // This logic automatically switches between Localhost and GitHub Pages
     const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-    // আপনার রিপোজিটরির নাম যদি 'tablighbd' হয় তবে এটি ঠিক আছে
-    const FEED_URL = isLocal ? '/feed.json' : '/tablighbd/feed.json'; 
-    // ----------------
-
-    const searchIcon = document.querySelector('.js-search-btn') || 
-                       document.querySelector('[aria-label="Search"]') || 
-                       document.querySelector('.icon-search')?.parentNode;
     
+    // If on Localhost, look in root. If on GitHub, look in /tablighbd/ folder.
+    const FEED_URL = isLocal ? '/feed.json' : '/tablighbd/feed.json'; 
+    const VIDEO_URL = isLocal ? '/videos.json' : '/tablighbd/videos.json'; 
+    // ===========================
+
     const overlay = document.getElementById('bengali-search-overlay');
-    const closeBtn = document.getElementById('close-bn-search');
     const input = document.getElementById('bn-search-input');
     const resultsDiv = document.getElementById('bn-search-results');
     const statusDiv = document.getElementById('bn-search-status');
+    const closeBtn = document.getElementById('close-bn-search');
     
-    let feedData = [];
+    let combinedData = [];
     let isDataLoaded = false;
 
-    // বাংলা টেক্সট নরমালাইজেশন ফাংশন (যুক্তবর্ণ ও কার-চিহ্ন ঠিকভাবে মেলানোর জন্য)
+    // Normalize Bengali text for better matching
     function normalizeText(text) {
         if (!text) return "";
         return text.normalize('NFKC').toLowerCase().trim();
     }
 
-    // আইকনে ক্লিক করলে সার্চ বক্স খোলা
+    // Helper: Convert "2:30" to Seconds
+    function timeToSeconds(timeStr) {
+        const p = timeStr.split(':').map(Number);
+        let seconds = 0;
+        if (p.length === 2) { seconds = p[0] * 60 + p[1]; }
+        if (p.length === 3) { seconds = p[0] * 3600 + p[1] * 60 + p[2]; }
+        return seconds;
+    }
+
+    // 1. Hijack the Theme's Search Icon
+    const searchIcon = document.querySelector('.js-search-btn') || 
+                       document.querySelector('[aria-label="Search"]') || 
+                       document.querySelector('.icon-search')?.parentNode;
+
     if (searchIcon) {
+        // Clone to remove existing theme events
         const newIcon = searchIcon.cloneNode(true);
-        searchIcon.parentNode.replaceChild(newIcon, searchIcon);
+        if(searchIcon.parentNode) {
+            searchIcon.parentNode.replaceChild(newIcon, searchIcon);
+        }
         
-        newIcon.addEventListener('click', function(e) {
+        newIcon.addEventListener('click', (e) => {
             e.preventDefault();
             overlay.style.display = 'flex';
-            document.body.style.overflow = 'hidden';
+            document.body.style.overflow = 'hidden'; // Disable scroll
             input.focus();
             
+            // Load Data only once
             if (!isDataLoaded) {
-                statusDiv.style.display = 'block';
-                statusDiv.innerText = 'ডাটা লোড হচ্ছে, অনুগ্রহ করে অপেক্ষা করুন...';
+                statusDiv.innerText = 'ডাটা লোড হচ্ছে...';
                 
-                fetch(FEED_URL)
-                    .then(res => {
-                        if (!res.ok) throw new Error("Feed file not found");
+                Promise.all([
+                    // Fetch Articles
+                    fetch(FEED_URL).then(res => {
+                        if(!res.ok) throw new Error("Feed Error");
                         return res.json();
-                    })
-                    .then(data => { 
-                        feedData = data.items;
-                        isDataLoaded = true;
-                        statusDiv.innerText = `সফলভাবে ${feedData.length} টি পোস্ট ইনডেক্স করা হয়েছে। এখন সার্চ করুন।`;
-                        
-                        // যদি ১০ টার কম পোস্ট দেখায়, তবে ওয়ার্নিং দিবে
-                        if(feedData.length <= 10) {
-                            statusDiv.innerHTML += ` <br><span style="color:orange;">(সতর্কতা: মাত্র ১০টি পোস্ট পাওয়া গেছে। সব পোস্ট পেতে Publii সেটিংসে 'Amount of items' ০ করে দিন।)</span>`;
-                        }
-                    })
-                    .catch(err => { 
-                        console.error(err);
-                        statusDiv.innerHTML = `<span style="color:red;">ত্রুটি: ডাটা লোড করা যায়নি। ইন্টারনেট সংযোগ চেক করুন।</span>`;
-                    });
+                    }).catch(e => ({items:[]})),
+                    
+                    // Fetch Videos
+                    fetch(VIDEO_URL).then(res => {
+                        if(!res.ok) throw new Error("Video Error");
+                        return res.json();
+                    }).catch(e => [])
+                ]).then(([articleData, videoData]) => {
+                    
+                    // Process Articles
+                    const articles = (articleData.items || []).map(item => ({
+                        type: 'article',
+                        title: item.title,
+                        url: item.url,
+                        desc: item.summary || 'বিস্তারিত পড়ুন',
+                        content: item.content_html || item.content_text || ''
+                    }));
+
+                    // Process Videos
+                    const videos = Array.isArray(videoData) ? videoData.map(item => ({
+                        type: 'video',
+                        title: item.title,
+                        url: item.url,
+                        id: item.id,
+                        desc: 'ইউটিউব ভিডিও দেখুন',
+                        thumb: item.thumb || `https://i.ytimg.com/vi/${item.id}/mqdefault.jpg`,
+                        chapters: item.chapters || [] 
+                    })) : [];
+
+                    combinedData = [...articles, ...videos];
+                    isDataLoaded = true;
+                    statusDiv.innerText = `রেডি! ${articles.length} টি আর্টিকেল এবং ${videos.length} টি ভিডিও ইনডেক্স করা হয়েছে।`;
+
+                });
             }
         });
     }
 
-    function closeSearch() {
-        overlay.style.display = 'none';
-        document.body.style.overflow = 'auto';
-        input.value = '';
-        resultsDiv.innerHTML = '';
-    }
+    // 2. Close Logic
+    function closeSearch() { overlay.style.display = 'none'; document.body.style.overflow = 'auto'; }
     closeBtn.addEventListener('click', closeSearch);
-    overlay.addEventListener('click', (e) => { if (e.target === overlay) closeSearch(); });
     document.addEventListener('keydown', (e) => { if (e.key === "Escape") closeSearch(); });
+    overlay.addEventListener('click', (e) => { if (e.target === overlay) closeSearch(); });
 
-    // উন্নত সার্চ লজিক (Multi-word matching)
+    // 3. Search Logic
     input.addEventListener('input', function(e) {
         const rawQuery = e.target.value;
         const query = normalizeText(rawQuery);
         
         resultsDiv.innerHTML = '';
-
         if (query.length < 2) return;
-        if (!isDataLoaded) return;
 
-        // কুয়েরিকে শব্দে ভাগ করা (যেমন: "ঈসা মৃত্যু" -> ["ঈসা", "মৃত্যু"])
         const queryTerms = query.split(/\s+/).filter(term => term.length > 0);
 
-        const matches = feedData.filter(item => {
+        const matches = [];
+        
+        combinedData.forEach(item => {
             const title = normalizeText(item.title);
-            // HTML ট্যাগ রিমুভ করে শুধু টেক্সট নেয়া হচ্ছে
-            const content = normalizeText(item.content_html || item.content_text || "").replace(/<[^>]*>?/gm, ' ');
+            const content = normalizeText(item.content || "").replace(/<[^>]*>?/gm, ' ');
             
-            // সব কটি শব্দ টাইটেল অথবা কন্টেন্ট-এর কোথাও না কোথাও থাকতে হবে
-            return queryTerms.every(term => title.includes(term) || content.includes(term));
+            // Check Main Title/Content
+            const titleMatch = queryTerms.every(term => title.includes(term) || content.includes(term));
+            
+            // Check Chapters (Video Only)
+            let chapterMatch = null;
+            if(item.type === 'video' && item.chapters && item.chapters.length > 0) {
+                 chapterMatch = item.chapters.find(ch => {
+                    return queryTerms.every(term => normalizeText(ch.title).includes(term));
+                 });
+            }
+
+            if (titleMatch) {
+                matches.push({ item: item, matchType: 'main' });
+            } else if (chapterMatch) {
+                matches.push({ item: item, matchType: 'chapter', chapter: chapterMatch });
+            }
         });
 
+        // 4. Render Results
         if (matches.length > 0) {
-            matches.forEach(item => {
+            matches.forEach(match => {
+                const item = match.item;
                 const el = document.createElement('a');
-                el.href = item.url;
-                el.style.cssText = 'display:block; padding:15px; border-bottom:1px solid #f0f0f0; text-decoration:none; color:#333; transition:0.2s;';
-                el.onmouseover = () => el.style.background = '#f1f5f9';
+                
+                // Link Logic
+                if(match.matchType === 'chapter') {
+                    // Link to specific second in video
+                    el.href = `https://www.youtube.com/watch?v=${item.id}&t=${timeToSeconds(match.chapter.time)}s`;
+                    el.target = "_blank";
+                } else {
+                    el.href = item.url;
+                    el.target = item.type === 'video' ? '_blank' : '_self';
+                }
+
+                // Styling
+                el.style.cssText = 'display:flex; gap:15px; padding:15px; border-bottom:1px solid #eee; text-decoration:none; color:#333; align-items:center; transition:0.2s;';
+                el.onmouseover = () => el.style.background = '#f9f9f9';
                 el.onmouseout = () => el.style.background = 'transparent';
                 
+                // Icon / Thumbnail
+                let iconOrThumb = '';
+                if(item.type === 'video') {
+                    iconOrThumb = `<div style="position:relative; min-width:100px;"><img src="${item.thumb}" style="width:100px; height:56px; border-radius:4px; object-fit:cover;"><span style="position:absolute; bottom:2px; right:2px; background:rgba(0,0,0,0.7); color:white; font-size:10px; padding:0 4px; border-radius:2px;">▶</span></div>`;
+                } else {
+                    iconOrThumb = `<div style="min-width:100px; height:56px; background:#f0f0f0; display:flex; align-items:center; justify-content:center; border-radius:4px; color:#ccc; font-size:24px;">📝</div>`;
+                }
+
+                // Description Text
+                let subText = '';
+                let titleColor = item.type === 'video' ? '#d32f2f' : '#0056b3';
+                
+                if (match.matchType === 'chapter') {
+                    subText = `<span style="color:#d32f2f; background:#fff0f0; padding:2px 6px; border-radius:4px; font-size:12px; font-weight:bold;">ভিডিও চ্যাপ্টার</span> <b>${match.chapter.time}</b> - ${match.chapter.title}`;
+                    titleColor = '#444'; // Differentiate chapter match
+                } else {
+                    subText = item.type === 'video' ? '📺 ইউটিউব ভিডিও' : (item.desc.substring(0, 80) + '...');
+                }
+
                 el.innerHTML = `
-                    <div style="font-size:18px; font-weight:bold; color:#0056b3; margin-bottom:5px;">${item.title}</div>
-                    <div style="font-size:14px; color:#666; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">${item.summary || 'বিস্তারিত পড়তে ক্লিক করুন...'}</div>
+                    ${iconOrThumb}
+                    <div>
+                        <div style="font-size:16px; font-weight:bold; color:${titleColor}; margin-bottom:4px;">
+                            ${item.title}
+                        </div>
+                        <div style="font-size:13px; color:#666;">${subText}</div>
+                    </div>
                 `;
                 resultsDiv.appendChild(el);
             });
