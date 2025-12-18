@@ -190,4 +190,64 @@
             resultsDiv.innerHTML = '<div style="text-align:center; padding:20px; color:#999;">কোন ফলাফল পাওয়া যায়নি</div>';
         }
     });
+});</script><script>document.addEventListener('DOMContentLoaded', function() {
+    // ===============================================
+    // 1. CONFIGURATION
+    // ===============================================
+    const hostname = window.location.hostname;
+    const hardcodedUrl = 'https://najibakash.github.io/tablighbd';
+    
+    // Logic: If on GitHub, use '/tablighbd'. Else (Wasmer/Localhost), use Root.
+    let currentBase = '';
+    if (hostname.includes('najibakash.github.io')) {
+        currentBase = '/tablighbd';
+    } else {
+        currentBase = ''; 
+    }
+
+    // ===============================================
+    // 2. FIX ALL LINKS (<a> tags)
+    // ===============================================
+    // We select ALL links on the site that start with http/https
+    const allLinks = document.querySelectorAll('a[href^="http"]');
+    
+    allLinks.forEach(link => {
+        // If the link points to the old hardcoded GitHub URL...
+        if (link.href.includes(hardcodedUrl)) {
+            // ...replace it with the current correct base
+            // Example: https://najibakash.../tags/x -> https://wasmer.app/tags/x
+            const newLink = link.href.replace(hardcodedUrl, currentBase);
+            link.href = newLink;
+        }
+    });
+
+    // ===============================================
+    // 3. FIX IMAGES (<img> tags)
+    // ===============================================
+    const images = document.querySelectorAll('img');
+    images.forEach(img => {
+        if (img.src.includes(hardcodedUrl)) {
+            const newSrc = img.src.replace(hardcodedUrl, currentBase);
+            img.src = newSrc;
+        }
+    });
+
+    // ===============================================
+    // 4. FIX SVG ICONS (<use> tags)
+    // ===============================================
+    // This fixes the "assets/svg/svg-map.svg" paths
+    const svgUses = document.querySelectorAll('use');
+    
+    svgUses.forEach(use => {
+        // Get the link (checking both modern 'href' and older 'xlink:href')
+        let href = use.getAttribute('xlink:href') || use.getAttribute('href');
+        
+        if (href && href.includes(hardcodedUrl)) {
+            const newHref = href.replace(hardcodedUrl, currentBase);
+            
+            // Update both attributes to be safe
+            use.setAttribute('xlink:href', newHref);
+            use.setAttribute('href', newHref);
+        }
+    });
 });</script></body></html>
