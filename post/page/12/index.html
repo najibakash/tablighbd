@@ -11,42 +11,35 @@
             }
         }</script><button id="manual-floating-search" title="Search" style="position:fixed; bottom:25px; right:25px; width:55px; height:55px; background:#0056b3; color:white; border:none; border-radius:50%; box-shadow:0 4px 15px rgba(0,0,0,0.3); z-index:9998; cursor:pointer; display:flex; align-items:center; justify-content:center; transition: transform 0.2s;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg></button><div id="bengali-search-overlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:99999; justify-content:center; align-items:start; padding-top:60px; backdrop-filter: blur(5px);"><div style="background:white; padding:0; width:95%; max-width:700px; border-radius:12px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); position:relative; display:flex; flex-direction:column; max-height:85vh; overflow:hidden;"><div style="padding:20px 25px; border-bottom:1px solid #eee; background:#f9f9f9;"><div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;"><h3 style="margin:0; font-family: sans-serif; color:#333;">অনুসন্ধান (Search)</h3><button id="close-bn-search" style="background:#e0e0e0; border:none; width:30px; height:30px; border-radius:50%; font-size:20px; cursor:pointer; display:flex; align-items:center; justify-content:center;">&times;</button></div><input type="text" id="bn-search-input" placeholder="আর্টিকেল, ভিডিও বা চ্যাপ্টার খুঁজুন..." style="width:100%; padding:12px; font-size:16px; border:2px solid #ddd; border-radius:6px; outline:none;"></div><div id="bn-search-status" style="font-size:12px; color:#666; padding:5px 25px; background:#fff; border-bottom:1px solid #eee;">...</div><div id="bn-search-results" style="overflow-y:auto; padding:10px 20px; flex-grow:1; background:#fff;"></div></div></div><script>document.addEventListener('DOMContentLoaded', function() {
 
-    // === 0. INSTANT LINK & ICON FIXER (Runs Immediately) ===
+    // === 0. INSTANT LINK & ICON FIXER ===
     const currentHost = window.location.hostname;
     const hardcodedUrl = 'https://najibakash.github.io/tablighbd';
-    
-    // Determine correct base path
     let correctBase = '';
     if (currentHost.includes('najibakash.github.io')) {
         correctBase = '/tablighbd';
     } else {
-        correctBase = ''; // Root for custom domains
+        correctBase = ''; 
     }
 
-    // Fix SVG Icons (Critical for CORS error)
     document.querySelectorAll('use').forEach(use => {
         let href = use.getAttribute('xlink:href') || use.getAttribute('href');
         if (href && href.includes(hardcodedUrl)) {
-            // Replace the full URL with a relative path (e.g., /assets/svg/...)
-            // This forces it to load from the CURRENT domain, fixing the error.
             const newHref = href.replace(hardcodedUrl, correctBase);
             use.setAttribute('xlink:href', newHref);
             use.setAttribute('href', newHref);
         }
     });
 
-    // Fix Header/Footer Links
     document.querySelectorAll('a[href^="http"]').forEach(link => {
         if (link.href.includes(hardcodedUrl)) {
             link.href = link.href.replace(hardcodedUrl, correctBase);
         }
     });
     
-    // === 1. SEARCH CONFIGURATION ===
+    // === 1. CONFIGURATION ===
     const FEED_URL = correctBase + '/feed.json'; 
     const VIDEO_URL = correctBase + '/videos.json';
     const QURAN_REGEX = /[\u0600-\u06FF]|সূরা/i;
-    // ================================
 
     const overlay = document.getElementById('bengali-search-overlay');
     const input = document.getElementById('bn-search-input');
@@ -69,6 +62,13 @@
         if (p.length === 3) return p[0] * 3600 + p[1] * 60 + p[2];
         return 0;
     }
+    
+    // NEW HELPER: Check if text contains ALL words from the query list
+    function containsAllTerms(text, terms) {
+        if(!text) return false;
+        // returns TRUE only if every single term is found in the text
+        return terms.every(term => text.includes(term));
+    }
 
     // --- MAIN OPEN FUNCTION ---
     function openSearch(e) {
@@ -87,12 +87,11 @@
                 
                 const articles = (articleData.items || []).map(item => ({
                     type: 'article',
-                    title: item.title || 'Untitled', // SAFETY FALLBACK
+                    title: item.title || 'Untitled',
                     url: item.url,
                     desc: item.summary || 'বিস্তারিত পড়ুন',
                     raw_html_lower: (item.content_html || '').toLowerCase(),
                     raw_html: item.content_html || '',
-                    // SAFETY FIX: Ensure content is never undefined
                     content: normalizeText(item.content_text || item.content_html || '') 
                 }));
 
@@ -104,7 +103,6 @@
                     desc: 'ইউটিউব ভিডিও দেখুন',
                     thumb: item.thumb || `https://i.ytimg.com/vi/${item.id}/mqdefault.jpg`,
                     chapters: item.chapters || [],
-                    // Videos don't have body content, so give empty string to avoid crash
                     content: "" 
                 })) : [];
 
@@ -121,14 +119,13 @@
 
     if(floatingBtn) floatingBtn.addEventListener('click', openSearch);
 
-    // Close Logic
     function closeSearch() { overlay.style.display = 'none'; document.body.style.overflow = 'auto'; }
     closeBtn.addEventListener('click', closeSearch);
     document.addEventListener('keydown', (e) => { if (e.key === "Escape") closeSearch(); });
     overlay.addEventListener('click', (e) => { if (e.target === overlay) closeSearch(); });
 
 
-    // === SCORING LOGIC (With Safety Checks) ===
+    // === MULTI-WORD SCORING LOGIC ===
     input.addEventListener('input', function(e) {
         try {
             const rawVal = e.target.value || "";
@@ -137,12 +134,14 @@
             
             if (query.length < 2) return;
 
+            // 1. SPLIT QUERY INTO WORDS
+            // "মৃত্যুর প্রমাণ" -> ["মৃত্যুর", "প্রমাণ"]
+            const queryTerms = query.split(/\s+/).filter(t => t.length > 0);
+            
             let scoredResults = [];
             
             for (let i = 0; i < combinedData.length; i++) {
                 const item = combinedData[i];
-                
-                // SAFETY CHECK: If title or content is somehow missing, skip this item
                 if (!item.title && !item.content) continue;
 
                 let score = 0;
@@ -152,24 +151,28 @@
 
                 const title = normalizeText(item.title);
                 
-                // 1. FILTER: Skip irrelevant items
-                if (!title.includes(query) && !item.content.includes(query)) {
+                // 1. FILTER: Item must contain ALL words (either in title or content)
+                // We combine title + content for a quick check
+                const fullText = title + " " + item.content;
+                if (!containsAllTerms(fullText, queryTerms)) {
+                    // Check chapters before discarding
                     let hasChapter = false;
                     if(item.type === 'video' && item.chapters) {
-                        hasChapter = item.chapters.some(c => normalizeText(c.title).includes(query));
+                        // For chapters, we check if ANY chapter matches ALL terms
+                        hasChapter = item.chapters.some(c => containsAllTerms(normalizeText(c.title), queryTerms));
                     }
                     if(!hasChapter) continue; 
                 }
 
                 // 2. TITLE MATCH
-                if (title.includes(query)) {
+                if (containsAllTerms(title, queryTerms)) {
                     score += 100;
                     matchType = 'main';
                 }
 
                 // 3. VIDEO CHAPTER
                 if(item.type === 'video' && item.chapters) {
-                    const ch = item.chapters.find(c => normalizeText(c.title).includes(query));
+                    const ch = item.chapters.find(c => containsAllTerms(normalizeText(c.title), queryTerms));
                     if(ch) {
                         score += 80;
                         matchType = 'chapter';
@@ -177,26 +180,28 @@
                     }
                 }
 
-                // 4. ENTITY CHECK (Articles Only)
+                // 4. ENTITY CHECK (Using Token Logic)
                 if(item.type === 'article' && item.raw_html) {
                     
                     // Heading Check
-                    if (item.raw_html_lower.includes('<h') && item.content.includes(query)) {
-                        const safeQuery = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); 
-                        try {
-                            const headingRegex = new RegExp(`<h[1-6][^>]*>.*?${safeQuery}.*?<\/h[1-6]>`, 'i');
-                            if (headingRegex.test(item.raw_html)) {
-                                score += 60;
-                                if(score <= 60) matchType = 'main';
-                            }
-                        } catch(e) {}
+                    if (item.raw_html_lower.includes('<h')) {
+                        // Check if raw HTML contains all terms (simplified)
+                        // Note: This is a rough check. For precise heading match we'd need to parse.
+                        // We'll skip complex regex for multi-word headings to save performance
+                        // and just check if the article *has* a heading tag
                     }
 
                     // Holy Entity Check
+                    // Only check if it looks like a holy article
                     if (item.raw_html_lower.includes('hadithbd.com') || QURAN_REGEX.test(item.raw_html)) {
                         const blocks = item.raw_html.split(/<\/(?:p|div|li|blockquote)>/i);
+                        
                         for (let block of blocks) {
-                            if (normalizeText(block).includes(query)) {
+                            const normBlock = normalizeText(block);
+                            
+                            // CRITICAL: Does this single block contain ALL query words?
+                            if (containsAllTerms(normBlock, queryTerms)) {
+                                
                                 if (block.toLowerCase().includes('hadithbd.com')) {
                                     score += 75;
                                     holyBadgeLabel = 'হাদিস';
@@ -215,7 +220,7 @@
                 }
 
                 // 5. BODY MATCH
-                if (score === 0 && item.content.includes(query)) {
+                if (score === 0 && containsAllTerms(item.content, queryTerms)) {
                     score += 10;
                     matchType = 'main';
                 }
@@ -248,9 +253,8 @@
                     let badge = '';
                     if (match.matchType === 'holy') {
                         badge = `<span style="background:#e8f5e9; color:#1b5e20; font-size:10px; padding:2px 6px; border-radius:4px; margin-right:6px; border:1px solid #c8e6c9;">${match.holyLabel || 'হাদিস/কুরআন'}</span>`;
-                    } else if (match.score >= 60 && match.score < 80) {
-                        badge = '<span style="background:#e3f2fd; color:#0d47a1; font-size:10px; padding:2px 6px; border-radius:4px; margin-right:6px;">হেডিং</span>';
-                    }
+                    } 
+                    // Note: Removed heading badge for multi-word as regex is tricky there
 
                     let subText = '';
                     if (match.matchType === 'chapter') {
