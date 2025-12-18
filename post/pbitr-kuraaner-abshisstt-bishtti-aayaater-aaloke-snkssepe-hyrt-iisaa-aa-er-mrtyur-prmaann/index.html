@@ -11,20 +11,18 @@
             }
         }</script><button id="manual-floating-search" title="Search" style="position:fixed; bottom:25px; right:25px; width:55px; height:55px; background:#0056b3; color:white; border:none; border-radius:50%; box-shadow:0 4px 15px rgba(0,0,0,0.3); z-index:9998; cursor:pointer; display:flex; align-items:center; justify-content:center; transition: transform 0.2s;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg></button><div id="bengali-search-overlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:99999; justify-content:center; align-items:start; padding-top:60px; backdrop-filter: blur(5px);"><div style="background:white; padding:0; width:95%; max-width:700px; border-radius:12px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); position:relative; display:flex; flex-direction:column; max-height:85vh; overflow:hidden;"><div style="padding:20px 25px; border-bottom:1px solid #eee; background:#f9f9f9;"><div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;"><h3 style="margin:0; font-family: sans-serif; color:#333;">অনুসন্ধান (Search)</h3><button id="close-bn-search" style="background:#e0e0e0; border:none; width:30px; height:30px; border-radius:50%; font-size:20px; cursor:pointer; display:flex; align-items:center; justify-content:center;">&times;</button></div><input type="text" id="bn-search-input" placeholder="আর্টিকেল, ভিডিও বা চ্যাপ্টার খুঁজুন..." style="width:100%; padding:12px; font-size:16px; border:2px solid #ddd; border-radius:6px; outline:none;"></div><div id="bn-search-status" style="font-size:12px; color:#666; padding:5px 25px; background:#fff; border-bottom:1px solid #eee;">...</div><div id="bn-search-results" style="overflow-y:auto; padding:10px 20px; flex-grow:1; background:#fff;"></div></div></div><script>document.addEventListener('DOMContentLoaded', function() {
     
-    // === ROBUST CONFIGURATION ===
+    // === CONFIGURATION ===
     const hostname = window.location.hostname;
-    
-    // Logic: Only GitHub Pages needs the '/tablighbd' folder prefix.
-    // 'wasmer.app', 'localhost', or any other custom domain will use Root ('').
     let BASE_URL = '';
-    
     if (hostname.includes('najibakash.github.io')) {
         BASE_URL = '/tablighbd';
     }
-    
     const FEED_URL = BASE_URL + '/feed.json'; 
     const VIDEO_URL = BASE_URL + '/videos.json';
-    // ============================
+    
+    // QURAN DETECTOR: Finds Arabic Chars OR the word 'সূরা'
+    const QURAN_REGEX = /[\u0600-\u06FF]|সূরা/i;
+    // ====================
 
     const overlay = document.getElementById('bengali-search-overlay');
     const input = document.getElementById('bn-search-input');
@@ -48,7 +46,7 @@
         return 0;
     }
 
-    // --- MAIN SEARCH FUNCTION ---
+    // --- MAIN OPEN FUNCTION ---
     function openSearch(e) {
         if(e) e.preventDefault();
         overlay.style.display = 'flex';
@@ -68,7 +66,8 @@
                     title: item.title,
                     url: item.url,
                     desc: item.summary || 'বিস্তারিত পড়ুন',
-                    content: item.content_html || item.content_text || ''
+                    raw_html: item.content_html || '', // IMPORTANT: We need raw HTML to check for links
+                    content: normalizeText(item.content_text || item.content_html || '')
                 }));
 
                 const videos = Array.isArray(videoData) ? videoData.map(item => ({
@@ -92,18 +91,11 @@
         }
     }
 
-    // --- TRIGGER 1: Floating Button (Guaranteed) ---
-    if(floatingBtn) {
-        floatingBtn.addEventListener('click', openSearch);
-    }
-
-    // --- TRIGGER 2: Theme Icon (Safe Mode) ---
-    // We wrap this in try-catch so if it fails on Homepage, the rest still works
+    if(floatingBtn) floatingBtn.addEventListener('click', openSearch);
+    
+    // Theme Icon Fallback
     try {
-        const themeIcon = document.querySelector('.js-search-btn') || 
-                          document.querySelector('[aria-label="Search"]') || 
-                          document.querySelector('.icon-search')?.parentNode;
-
+        const themeIcon = document.querySelector('.js-search-btn') || document.querySelector('[aria-label="Search"]') || document.querySelector('.icon-search')?.parentNode;
         if (themeIcon) {
             const newIcon = themeIcon.cloneNode(true);
             if(themeIcon.parentNode) {
@@ -111,43 +103,110 @@
                 newIcon.addEventListener('click', openSearch);
             }
         }
-    } catch(err) {
-        console.log("Theme search icon not found or different on homepage (Ignored).");
-    }
+    } catch(err) {}
 
-    // --- CLOSING & FILTERING ---
     function closeSearch() { overlay.style.display = 'none'; document.body.style.overflow = 'auto'; }
     closeBtn.addEventListener('click', closeSearch);
     document.addEventListener('keydown', (e) => { if (e.key === "Escape") closeSearch(); });
     overlay.addEventListener('click', (e) => { if (e.target === overlay) closeSearch(); });
 
+
+    // === PRECISE SCORING LOGIC ===
     input.addEventListener('input', function(e) {
         const query = normalizeText(e.target.value);
         resultsDiv.innerHTML = '';
         if (query.length < 2) return;
 
         const queryTerms = query.split(/\s+/).filter(term => term.length > 0);
-        const matches = [];
+        let scoredResults = [];
         
         combinedData.forEach(item => {
+            let score = 0;
+            let matchType = '';
+            let matchedChapter = null;
+            let holyBadgeLabel = ''; // To distinguish Quran vs Hadith
+
             const title = normalizeText(item.title);
-            const content = normalizeText(item.content || "").replace(/<[^>]*>?/gm, ' ');
             
-            const titleMatch = queryTerms.every(term => title.includes(term) || content.includes(term));
-            
-            let chapterMatch = null;
-            if(item.type === 'video' && item.chapters && item.chapters.length > 0) {
-                 chapterMatch = item.chapters.find(ch => {
-                    return queryTerms.every(term => normalizeText(ch.title).includes(term));
-                 });
+            // 1. TITLE MATCH (Score: 100)
+            if (title.includes(query)) {
+                score += 100;
+                matchType = 'main';
             }
 
-            if (titleMatch) matches.push({ item: item, matchType: 'main' });
-            else if (chapterMatch) matches.push({ item: item, matchType: 'chapter', chapter: chapterMatch });
+            // 2. VIDEO CHAPTER MATCH (Score: 80)
+            if(item.type === 'video' && item.chapters) {
+                 const ch = item.chapters.find(c => normalizeText(c.title).includes(query));
+                 if(ch) {
+                     score += 80;
+                     matchType = 'chapter';
+                     matchedChapter = ch;
+                 }
+            }
+
+            // 3. ENTITY ANALYSIS (Article Blocks)
+            if(item.type === 'article' && item.raw_html) {
+                
+                // A. HEADING CHECK (Score: 60)
+                const safeQuery = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); 
+                const headingRegex = new RegExp(`<h[1-6][^>]*>.*?${safeQuery}.*?<\/h[1-6]>`, 'i');
+                if (headingRegex.test(item.raw_html)) {
+                    score += 60;
+                    if(score <= 60) matchType = 'main';
+                }
+
+                // B. HOLY ENTITY CHECK (Score: 75)
+                // Split content into blocks (paragraphs/divs)
+                const blocks = item.raw_html.split(/<\/(?:p|div|li|blockquote)>/i);
+                
+                let isHolyMatch = false;
+                
+                for (let block of blocks) {
+                    const normalizedBlock = normalizeText(block);
+                    
+                    // Does this block contain the User's Query?
+                    if (normalizedBlock.includes(query)) {
+                        
+                        // CHECK 1: IS IT A HADITH? (Link to hadithbd.com)
+                        if (block.includes('hadithbd.com')) {
+                            isHolyMatch = true;
+                            holyBadgeLabel = 'হাদিস'; // Specific Label
+                            break; 
+                        }
+                        
+                        // CHECK 2: IS IT QURAN? (Arabic chars OR 'সূরা')
+                        if (QURAN_REGEX.test(block)) {
+                            isHolyMatch = true;
+                            holyBadgeLabel = 'কুরআন'; // Specific Label
+                            break;
+                        }
+                    }
+                }
+
+                if (isHolyMatch) {
+                    score += 75; 
+                    if(score <= 75) matchType = 'holy';
+                }
+            }
+
+            // 4. GENERAL BODY MATCH (Score: 10)
+            if (score === 0 && item.content.includes(query)) {
+                score += 10;
+                matchType = 'main';
+            }
+
+            // Add to results if score > 0
+            if (score > 0) {
+                scoredResults.push({ item, score, matchType, chapter: matchedChapter, holyLabel: holyBadgeLabel });
+            }
         });
 
-        if (matches.length > 0) {
-            matches.forEach(match => {
+        // SORTING
+        scoredResults.sort((a, b) => b.score - a.score);
+
+        // RENDER
+        if (scoredResults.length > 0) {
+            scoredResults.forEach(match => {
                 const item = match.item;
                 const el = document.createElement('a');
                 
@@ -163,25 +222,37 @@
                 el.onmouseover = () => el.style.background = '#f9f9f9';
                 el.onmouseout = () => el.style.background = 'transparent';
                 
+                // --- BADGES ---
+                let badge = '';
+                if (match.score >= 100) badge = ''; 
+                else if (match.matchType === 'chapter') badge = '';
+                else if (match.matchType === 'holy') {
+                    // Green Badge for Quran/Hadith
+                    badge = `<span style="background:#e8f5e9; color:#1b5e20; font-size:10px; padding:2px 6px; border-radius:4px; margin-right:6px; border:1px solid #c8e6c9;">${match.holyLabel || 'হাদিস/কুরআন'}</span>`;
+                }
+                else if (match.score >= 60) badge = '<span style="background:#e3f2fd; color:#0d47a1; font-size:10px; padding:2px 6px; border-radius:4px; margin-right:6px;">হেডিং</span>';
+
+                // --- DESCRIPTION ---
+                let subText = '';
+                if (match.matchType === 'chapter') {
+                    subText = `<span style="color:#d32f2f; background:#fff0f0; padding:2px 6px; border-radius:4px; font-size:12px; font-weight:bold;">ভিডিও চ্যাপ্টার</span> <b>${match.chapter.time}</b> - ${match.chapter.title}`;
+                } else {
+                    subText = item.type === 'video' ? '📺 ইউটিউব ভিডিও' : (item.desc.substring(0, 80) + '...');
+                }
+                
+                let titleColor = item.type === 'video' ? '#d32f2f' : '#0056b3';
+
                 let iconOrThumb = item.type === 'video' 
                     ? `<div style="position:relative; min-width:100px;"><img src="${item.thumb}" style="width:100px; height:56px; border-radius:4px; object-fit:cover;"><span style="position:absolute; bottom:2px; right:2px; background:rgba(0,0,0,0.7); color:white; font-size:10px; padding:0 4px; border-radius:2px;">▶</span></div>`
                     : `<div style="min-width:100px; height:56px; background:#f0f0f0; display:flex; align-items:center; justify-content:center; border-radius:4px; color:#ccc; font-size:24px;">📝</div>`;
 
-                let subText = '';
-                let titleColor = item.type === 'video' ? '#d32f2f' : '#0056b3';
-                
-                if (match.matchType === 'chapter') {
-                    subText = `<span style="color:#d32f2f; background:#fff0f0; padding:2px 6px; border-radius:4px; font-size:12px; font-weight:bold;">ভিডিও চ্যাপ্টার</span> <b>${match.chapter.time}</b> - ${match.chapter.title}`;
-                    titleColor = '#444';
-                } else {
-                    subText = item.type === 'video' ? '📺 ইউটিউব ভিডিও' : (item.desc.substring(0, 80) + '...');
-                }
-
                 el.innerHTML = `
                     ${iconOrThumb}
                     <div>
-                        <div style="font-size:16px; font-weight:bold; color:${titleColor}; margin-bottom:4px;">${item.title}</div>
-                        <div style="font-size:13px; color:#666;">${subText}</div>
+                        <div style="font-size:16px; font-weight:bold; color:${titleColor}; margin-bottom:4px;">
+                            ${item.title}
+                        </div>
+                        <div style="font-size:13px; color:#666;">${badge}${subText}</div>
                     </div>
                 `;
                 resultsDiv.appendChild(el);
