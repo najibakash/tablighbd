@@ -348,26 +348,36 @@
         }
     });
 });</script><script>document.addEventListener("DOMContentLoaded", function() {
-    // Select all YouTube iframes imported from WordPress
-    const videos = document.querySelectorAll('.wp-block-embed-youtube iframe, .wp-block-embed__wrapper iframe');
+    // Select the wrapper div that WordPress creates for videos
+    const embedWrappers = document.querySelectorAll('.wp-block-embed__wrapper');
 
-    videos.forEach(iframe => {
-        // 1. Get the Video Source
+    embedWrappers.forEach(wrapper => {
+        // 1. Find the iframe inside this wrapper
+        const iframe = wrapper.querySelector('iframe');
+        if (!iframe) return;
+
+        // 2. Get the Video ID and original Source
         const src = iframe.getAttribute('src');
-        if (!src) return;
-
-        // 2. Extract Video ID (RegEx matches embed URLs)
         const idMatch = src.match(/\/embed\/([a-zA-Z0-9_-]+)/);
         const videoId = idMatch ? idMatch[1] : null;
 
         if (videoId) {
-            // 3. Create the "Lite" Container
-            const wrapper = document.createElement('div');
-            wrapper.style.cssText = `
-                position: relative;
+            // 3. FORCE THE WRAPPER LAYOUT (Fixes the "Invisible" bug)
+            // We force the wrapper to maintain 16:9 aspect ratio even without the iframe
+            wrapper.style.position = 'relative';
+            wrapper.style.paddingBottom = '56.25%'; /* 16:9 Ratio */
+            wrapper.style.height = '0';
+            wrapper.style.overflow = 'hidden';
+            wrapper.style.backgroundColor = '#000';
+
+            // 4. Create the Clickable Thumbnail Overlay
+            const overlay = document.createElement('div');
+            overlay.style.cssText = `
+                position: absolute;
+                top: 0;
+                left: 0;
                 width: 100%;
                 height: 100%;
-                background-color: #000;
                 background-image: url('https://i.ytimg.com/vi/${videoId}/hqdefault.jpg');
                 background-size: cover;
                 background-position: center;
@@ -375,59 +385,46 @@
                 display: flex;
                 align-items: center;
                 justify-content: center;
+                z-index: 10;
             `;
 
-            // 4. Create the Play Button
+            // 5. The Red Play Button
             const playBtn = document.createElement('div');
-            playBtn.innerHTML = '▶';
+            playBtn.innerHTML = '<svg height="100%" version="1.1" viewBox="0 0 68 48" width="100%"><path class="ytp-large-play-button-bg" d="M66.52,7.74c-0.78-2.93-2.49-5.41-5.42-6.19C55.79,.13,34,0,34,0S12.21,.13,6.9,1.55 C3.97,2.33,2.27,4.81,1.48,7.74C0.06,13.05,0,24,0,24s0.06,10.95,1.48,16.26c0.78,2.93,2.49,5.41,5.42,6.19 C12.21,47.87,34,48,34,48s21.79-0.13,27.1-1.55c2.93-0.78,4.64-3.26,5.42-6.19C67.94,34.95,68,24,68,24S67.94,13.05,66.52,7.74z" fill="#f00"></path><path d="M 45,24 27,14 27,34" fill="#fff"></path></svg>';
             playBtn.style.cssText = `
-                width: 60px;
-                height: 40px;
-                background: red;
-                color: white;
-                border-radius: 10px;
-                font-size: 24px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+                width: 68px;
+                height: 48px;
+                opacity: 0.9;
             `;
-            wrapper.appendChild(playBtn);
+            overlay.appendChild(playBtn);
 
-            // 5. Add Click Event to Load Real Video
-            wrapper.onclick = function() {
-                // Restore the iframe with Autoplay enabled
+            // 6. ON CLICK: Replace Overlay with Real Iframe
+            overlay.onclick = function() {
+                // Create a fresh iframe
                 const newIframe = document.createElement('iframe');
-                // Ensure we append autoplay=1 so it plays immediately after clicking
+                // Add autoplay=1
                 const newSrc = src.includes('?') ? src + '&autoplay=1' : src + '?autoplay=1';
                 
                 newIframe.setAttribute('src', newSrc);
-                newIframe.setAttribute('width', iframe.getAttribute('width'));
-                newIframe.setAttribute('height', iframe.getAttribute('height'));
                 newIframe.setAttribute('frameborder', '0');
                 newIframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture');
                 newIframe.setAttribute('allowfullscreen', 'true');
+                
+                // CRITICAL: Force the iframe to fill the wrapper
+                newIframe.style.position = 'absolute';
+                newIframe.style.top = '0';
+                newIframe.style.left = '0';
                 newIframe.style.width = '100%';
                 newIframe.style.height = '100%';
                 
-                // Swap the image for the iframe
-                this.parentNode.replaceChild(newIframe, this);
+                // Clear the wrapper and add the iframe
+                wrapper.innerHTML = ''; 
+                wrapper.appendChild(newIframe);
             };
 
-            // 6. Replace the heavy iframe with our light wrapper
-            // We need to ensure the parent has dimensions
-            const parent = iframe.parentNode;
-            parent.style.position = 'relative'; 
-            // If parent has no height defined (common in WP embeds), we force aspect ratio
-            if(parent.offsetHeight === 0) {
-                 parent.style.paddingBottom = '56.25%'; // 16:9 Aspect Ratio
-                 parent.style.height = '0';
-                 wrapper.style.position = 'absolute';
-                 wrapper.style.top = '0';
-                 wrapper.style.left = '0';
-            }
-            
-            parent.replaceChild(wrapper, iframe);
+            // 7. Initial Swap: Clear wrapper and show only overlay
+            wrapper.innerHTML = '';
+            wrapper.appendChild(overlay);
         }
     });
 });</script></body></html>
