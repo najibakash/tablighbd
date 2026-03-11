@@ -379,7 +379,7 @@
         transform: scale(0.98);
         background: rgba(201, 168, 76, 0.08);
       }
-      .opt.hl:not(.dis) {
+      .opt.hl:not(.dis):not(.sel) {
         border-color: var(--gold);
         background: rgba(201, 168, 76, 0.06);
       }
@@ -620,6 +620,18 @@
         font-size: 3rem;
         margin-bottom: 8px;
       }
+      /* MCQ hint bar shown after first selection */
+      .mcq-hint {
+        font-size: 0.73rem;
+        color: var(--muted);
+        text-align: center;
+        margin-top: 10px;
+        opacity: 0;
+        transition: opacity 0.3s;
+      }
+      .mcq-hint.visible {
+        opacity: 1;
+      }
     </style>
   </head>
   <body>
@@ -659,7 +671,6 @@
         <span class="skp" onclick="goReg()">এখন বাদ দিন →</span>
       </div>
     </div>
-
     <!-- SCREEN 1 — REGISTRATION -->
     <div id="screen-reg" class="screen">
       <div class="hdr">
@@ -719,7 +730,6 @@
         <button class="btn btn-g" onclick="begin()">কুইজ শুরু করুন →</button>
       </div>
     </div>
-
     <!-- SCREEN 2 — QUESTION -->
     <div id="screen-q" class="screen">
       <div class="card">
@@ -755,6 +765,10 @@
         </div>
         <div class="qt" id="qq"></div>
         <div id="ma" class="opts"></div>
+        <!-- MCQ hint shown after first selection -->
+        <div class="mcq-hint" id="mcq-hint">
+          ✎ উত্তর পরিবর্তন করতে পারবেন • সময় শেষ বা "পরবর্তী" চাপলে চূড়ান্ত হবে
+        </div>
         <div id="fa" style="display: none">
           <p class="fhint">শূন্যস্থানে সঠিক উত্তর লিখুন:</p>
           <div id="fr" class="frows"></div>
@@ -768,7 +782,6 @@
         </button>
       </div>
     </div>
-
     <!-- SCREEN 3 — RESULT -->
     <div id="screen-result" class="screen">
       <div class="card">
@@ -789,7 +802,6 @@
         </button>
       </div>
     </div>
-
     <script>
       // ── CONFIG ────────────────────────────────────────────
       const HARDCODED_URL =
@@ -799,7 +811,6 @@
       let SURL = HARDCODED_URL || localStorage.getItem(SK) || "";
       const TOTAL = 27;
       const CIRC = 2 * Math.PI * 19;
-
       // ════ QUESTION BANK ═══════════════════════════════════
       const QS = [
         {
@@ -1025,19 +1036,18 @@
           ans: ["যাত্রার সময় আগত", "যাত্রার সময় আগত"],
         },
       ];
-
       // ════ STATE ═══════════════════════════════════════════
       let P = {},
         sessionId = "",
         startTime = "",
         qi = 0,
-        answered = false,
+        answered = false,   // true only after FINAL lock (timeout or fill submit)
+        selectedMCQ = -1,   // tracks currently highlighted MCQ choice (-1 = none)
         startTs = 0,
         timerInt = null,
         timeLeft = 0;
       // answers[i] = given answer string for question i (undefined if not yet answered)
       let answers = new Array(TOTAL).fill(undefined);
-
       // ════ INIT ════════════════════════════════════════════
       window.addEventListener("DOMContentLoaded", () => {
         show(SURL ? "screen-reg" : "screen-setup");
@@ -1052,7 +1062,6 @@
       window.addEventListener("pagehide", () => {
         if (answers.some((a) => a !== undefined)) autoSave(false);
       });
-
       // ════ SETUP ════════════════════════════════════════════
       function saveUrl() {
         const v = (document.getElementById("surl").value || "").trim();
@@ -1065,7 +1074,6 @@
       function goReg() {
         show("screen-reg");
       }
-
       // ════ REGISTRATION ════════════════════════════════════
       function begin() {
         const name = document.getElementById("rn").value.trim();
@@ -1099,11 +1107,10 @@
         e.focus();
         setTimeout(() => e.classList.remove("err"), 2000);
       }
-
       // ════ AUTO-SAVE ═══════════════════════════════════════
       function autoSave(completed) {
         if (!SURL) return;
-        setSaveDot("saving", "সংরক্ষণ হচ্ছে…");
+        setSaveDot("saving", "সংরক্ষণ হচ্ছে...");
         const payload = {
           sessionId,
           name: P.name,
@@ -1139,11 +1146,11 @@
         el.className = "save-dot" + (state ? " " + state : "");
         document.getElementById("save-txt").textContent = msg || "";
       }
-
       // ════ RENDER QUESTION ═════════════════════════════════
       function renderQ() {
         const q = QS[qi];
         answered = false;
+        selectedMCQ = -1;
         document.getElementById("pf").style.width = (qi / TOTAL) * 100 + "%";
         document.getElementById("qc").textContent = qi + 1 + " / " + TOTAL;
         document.getElementById("qq").textContent = q.q;
@@ -1153,12 +1160,16 @@
         const nb = document.getElementById("nb");
         nb.style.display = "none";
         nb.textContent = qi < TOTAL - 1 ? "পরবর্তী প্রশ্ন →" : "ফলাফল দেখুন →";
+        // Reset MCQ hint
+        const hint = document.getElementById("mcq-hint");
+        hint.classList.remove("visible");
         if (q.t === "mcq") {
           document.getElementById("tb").textContent = "🔘 MCQ";
           document.getElementById("tb").className = "tbadge bm";
           buildMCQ(q);
           document.getElementById("ma").style.display = "flex";
           document.getElementById("fa").style.display = "none";
+          hint.style.display = "block";
           startTimer(20);
         } else {
           document.getElementById("tb").textContent = "✏️ শূন্যস্থান";
@@ -1166,11 +1177,11 @@
           buildFill(q);
           document.getElementById("ma").style.display = "none";
           document.getElementById("fa").style.display = "block";
+          hint.style.display = "none";
           startTimer(30);
         }
         startTs = Date.now();
       }
-
       // ── MCQ ──────────────────────────────────────────────
       function buildMCQ(q) {
         const a = document.getElementById("ma");
@@ -1187,16 +1198,51 @@
           a.appendChild(d);
         });
       }
+
+      // pickMCQ: highlight selection freely, DO NOT lock until finalizeMCQ()
       function pickMCQ(chosen, q) {
-        if (answered) return;
+        if (answered) return; // already locked (timer ran out)
+
+        const opts = document.querySelectorAll(".opt");
+
+        // Remove previous selection highlight
+        opts.forEach((o) => o.classList.remove("sel"));
+
+        // Highlight newly chosen option
+        opts[chosen].classList.add("sel");
+        selectedMCQ = chosen;
+
+        // Show Next button and hint on first selection
+        document.getElementById("nb").style.display = "block";
+        document.getElementById("mcq-hint").classList.add("visible");
+      }
+
+      // finalizeMCQ: called when timer ends OR user clicks Next on an MCQ question
+      function finalizeMCQ(timedOut) {
+        if (answered) return; // guard against double call
         answered = true;
         clearInterval(timerInt);
-        answers[qi] = q.opts[chosen];
+
+        const q = QS[qi];
         const opts = document.querySelectorAll(".opt");
         opts.forEach((o) => o.classList.add("dis"));
-        opts[chosen].classList.add("sel"); // neutral teal highlight, no correct/wrong colour
-        showFB(false, null, false, true); // neutral feedback
+
+        if (timedOut && selectedMCQ === -1) {
+          // No selection made at all before timeout
+          answers[qi] = "(সময় শেষ)";
+          showFB(false, null, true, false);
+        } else {
+          // Either timed out with a selection, or user clicked Next
+          if (selectedMCQ >= 0) {
+            answers[qi] = q.opts[selectedMCQ];
+          } else {
+            answers[qi] = "(উত্তর দেওয়া হয়নি)";
+          }
+          showFB(false, null, timedOut && selectedMCQ === -1, true);
+        }
+
         autoSave(false);
+        document.getElementById("nb").style.display = "block";
       }
 
       // ── Fill ─────────────────────────────────────────────
@@ -1207,7 +1253,7 @@
           const r = document.createElement("div");
           r.className = "frow";
           r.innerHTML = `<label class="flbl">${q.labels[i]}</label>
-            <input class="finp" id="fi${i}" type="text" placeholder="এখানে লিখুন…" autocomplete="off">`;
+            <input class="finp" id="fi${i}" type="text" placeholder="এখানে লিখুন..." autocomplete="off">`;
           w.appendChild(r);
         }
         document.getElementById("fb2").disabled = false;
@@ -1253,13 +1299,12 @@
             if (inp) {
               inp.disabled = true;
               inp.classList.add("sub");
-            } // neutral teal style
+            }
           }
         }
         showFB(false, null, timedOut, !timedOut);
         autoSave(false);
       }
-
       // ── Timer ────────────────────────────────────────────
       function startTimer(s) {
         clearInterval(timerInt);
@@ -1285,13 +1330,7 @@
       function onTO() {
         const q = QS[qi];
         if (q.t === "mcq") {
-          answered = true;
-          answers[qi] = "(সময় শেষ)";
-          document
-            .querySelectorAll(".opt")
-            .forEach((o) => o.classList.add("dis"));
-          showFB(false, null, true, false);
-          autoSave(false);
+          finalizeMCQ(true); // lock with whatever is (or isn't) selected
         } else {
           const vals = [];
           for (let i = 0; i < QS[qi].blanks; i++)
@@ -1299,14 +1338,10 @@
           doFill(QS[qi], vals, true);
         }
       }
-      function elap() {
-        return Math.min(Math.round((Date.now() - startTs) / 1000), 99);
-      }
-
       // ── Feedback (neutral — no correct answer revealed) ──
       function showFB(ok, ca, timedOut, submitted) {
         const fd = document.getElementById("fd");
-        if (timedOut) {
+        if (timedOut && selectedMCQ === -1) {
           fd.className = "fb ft";
           fd.innerHTML = `<div class="fbi">⏱️</div>সময় শেষ! পরবর্তী প্রশ্নে যান।`;
         } else {
@@ -1320,14 +1355,24 @@
           80,
         );
       }
-
       // ── Navigation ───────────────────────────────────────
       function nxt() {
+        const q = QS[qi];
+        // For MCQ: finalize current selection before moving on
+        if (q.t === "mcq" && !answered) {
+          finalizeMCQ(false);
+          // Give a brief moment to show the lock state, then advance
+          setTimeout(() => {
+            qi++;
+            if (qi >= TOTAL) showResult();
+            else renderQ();
+          }, 300);
+          return;
+        }
         qi++;
         if (qi >= TOTAL) showResult();
         else renderQ();
       }
-
       // ════ RESULTS ═════════════════════════════════════════
       function showResult() {
         autoSave(true);
@@ -1359,7 +1404,6 @@
           el.textContent = "✓ আপনার উত্তর সফলভাবে পাঠানো হয়েছে।";
         }
       }
-
       // ── Util ─────────────────────────────────────────────
       function show(id) {
         document
