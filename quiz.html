@@ -69,7 +69,6 @@
           transform: none;
         }
       }
-
       .card {
         background: var(--card);
         border: 1px solid var(--border);
@@ -94,7 +93,6 @@
           transparent
         );
       }
-
       .hdr {
         text-align: center;
         padding: 22px 14px 0;
@@ -120,7 +118,6 @@
         font-size: 0.8rem;
         margin-bottom: 18px;
       }
-
       .fg {
         margin-bottom: 15px;
       }
@@ -155,7 +152,6 @@
       .fi.err {
         border-color: var(--red);
       }
-
       .rules {
         display: flex;
         gap: 8px;
@@ -177,7 +173,6 @@
         font-size: 0.98rem;
         color: var(--gold2);
       }
-
       .btn {
         display: block;
         width: 100%;
@@ -216,7 +211,6 @@
       .btn-t:hover {
         background: #3dd6c8;
       }
-
       /* Save indicator */
       .save-dot {
         display: flex;
@@ -266,7 +260,6 @@
           opacity: 0.35;
         }
       }
-
       .prow {
         display: flex;
         align-items: center;
@@ -292,7 +285,6 @@
         white-space: nowrap;
         font-family: "Amiri", serif;
       }
-
       .trow {
         display: flex;
         align-items: center;
@@ -354,7 +346,6 @@
         color: var(--gold);
         border: 1px solid rgba(201, 168, 76, 0.3);
       }
-
       .qt {
         font-size: 0.98rem;
         line-height: 1.8;
@@ -364,7 +355,6 @@
         padding-bottom: 15px;
         border-bottom: 1px solid var(--border);
       }
-
       .opts {
         display: flex;
         flex-direction: column;
@@ -393,20 +383,14 @@
         border-color: var(--gold);
         background: rgba(201, 168, 76, 0.06);
       }
-      .opt.ok {
-        border-color: var(--green) !important;
-        background: rgba(39, 174, 96, 0.12) !important;
-      }
-      .opt.ng {
-        border-color: var(--red) !important;
-        background: rgba(231, 76, 60, 0.1) !important;
-      }
-      .opt.rv {
-        border-color: var(--green) !important;
-        background: rgba(39, 174, 96, 0.08) !important;
+      /* selected = neutral highlight, no green/red */
+      .opt.sel {
+        border-color: var(--teal) !important;
+        background: rgba(46, 196, 182, 0.1) !important;
       }
       .opt.dis {
         cursor: default;
+        opacity: 0.7;
       }
       .ol {
         width: 27px;
@@ -422,19 +406,10 @@
         margin-top: 1px;
         transition: background 0.15s;
       }
-      .opt.ok .ol {
-        background: var(--green);
-        color: #fff;
+      .opt.sel .ol {
+        background: var(--teal);
+        color: #0d1b2a;
       }
-      .opt.ng .ol {
-        background: var(--red);
-        color: #fff;
-      }
-      .opt.rv .ol {
-        background: var(--green);
-        color: #fff;
-      }
-
       .fhint {
         font-size: 0.77rem;
         color: var(--muted);
@@ -472,13 +447,9 @@
       .finp:focus {
         border-color: var(--gold);
       }
-      .finp.ok {
-        border-color: var(--green);
-        background: rgba(39, 174, 96, 0.07);
-      }
-      .finp.bad {
-        border-color: var(--red);
-        background: rgba(231, 76, 60, 0.07);
+      .finp.sub {
+        border-color: var(--teal);
+        background: rgba(46, 196, 182, 0.07);
       }
       .finp:disabled {
         opacity: 0.7;
@@ -505,7 +476,6 @@
         opacity: 0.4;
         cursor: default;
       }
-
       .fb {
         display: none;
         margin-top: 15px;
@@ -515,13 +485,10 @@
         line-height: 1.65;
         animation: fu 0.25s ease;
       }
-      .fc {
-        background: rgba(39, 174, 96, 0.1);
-        border: 1px solid rgba(39, 174, 96, 0.3);
-      }
-      .fw {
-        background: rgba(231, 76, 60, 0.08);
-        border: 1px solid rgba(231, 76, 60, 0.25);
+      .fn {
+        background: rgba(46, 196, 182, 0.08);
+        border: 1px solid rgba(46, 196, 182, 0.25);
+        color: var(--teal);
       }
       .ft {
         background: rgba(201, 168, 76, 0.07);
@@ -531,90 +498,26 @@
         font-size: 1.15rem;
         margin-bottom: 3px;
       }
-      .fba {
-        color: var(--gold2);
-        font-weight: 700;
-        margin-top: 3px;
-      }
-
       /* results */
-      .sring-wrap {
-        width: 120px;
-        height: 120px;
-        margin: 0 auto 14px;
-        position: relative;
-      }
-      .sring-wrap svg {
-        width: 100%;
-        height: 100%;
-      }
-      .srtrack {
-        fill: none;
-        stroke: rgba(255, 255, 255, 0.07);
-        stroke-width: 8;
-      }
-      .srfill {
-        fill: none;
-        stroke-width: 8;
-        stroke-linecap: round;
-        transform-origin: center;
-        transform: rotate(-90deg);
-        stroke: var(--gold);
-        transition: stroke-dashoffset 1.2s ease;
-      }
-      .srcenter {
-        position: absolute;
-        inset: 0;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-      }
-      .srbig {
-        font-family: "Amiri", serif;
-        font-size: 1.9rem;
-        color: var(--gold2);
-        line-height: 1;
-      }
-      .srdenom {
-        font-size: 0.75rem;
-        color: var(--muted);
-      }
       .res-hero {
         text-align: center;
         padding: 20px 0 16px;
       }
-      .res-pct {
-        font-size: 1.4rem;
+      .res-title {
+        font-family: "Amiri", serif;
+        font-size: 1.5rem;
         color: var(--gold2);
         font-weight: 700;
+        margin-bottom: 6px;
+      }
+      .res-sub {
+        font-size: 0.85rem;
+        color: var(--muted);
+        margin-bottom: 4px;
       }
       .res-who {
         font-size: 0.85rem;
         color: var(--muted);
-        margin-top: 2px;
-      }
-      .srow {
-        display: flex;
-        gap: 8px;
-        margin-bottom: 18px;
-      }
-      .sbox {
-        flex: 1;
-        text-align: center;
-        background: rgba(255, 255, 255, 0.04);
-        border: 1px solid var(--border);
-        border-radius: 10px;
-        padding: 11px 6px;
-      }
-      .sv {
-        font-family: "Amiri", serif;
-        font-size: 1.35rem;
-      }
-      .sl {
-        font-size: 0.68rem;
-        color: var(--muted);
-        margin-top: 2px;
       }
       .al {
         display: flex;
@@ -643,29 +546,16 @@
         flex: 1;
         line-height: 1.55;
       }
-      .aok {
-        background: rgba(39, 174, 96, 0.15);
-        color: var(--green);
-      }
-      .afl {
-        background: rgba(231, 76, 60, 0.12);
-        color: var(--red);
-      }
       .atp {
         font-size: 0.65rem;
         border-radius: 4px;
         padding: 1px 5px;
         font-family: "Amiri", serif;
       }
-      .acv {
-        color: var(--gold);
-        font-weight: 600;
-      }
       .atm {
         color: var(--muted);
         font-size: 0.7rem;
       }
-
       .ss {
         padding: 12px;
         border-radius: 9px;
@@ -674,19 +564,14 @@
         margin-bottom: 14px;
         display: none;
       }
-      .ss-s {
-        background: rgba(46, 196, 182, 0.1);
-        color: var(--teal);
+      .ss-f {
+        background: rgba(231, 76, 60, 0.08);
+        color: var(--red);
       }
       .ss-ok {
         background: rgba(39, 174, 96, 0.1);
         color: var(--green);
       }
-      .ss-f {
-        background: rgba(231, 76, 60, 0.08);
-        color: var(--red);
-      }
-
       .setupbox {
         background: rgba(201, 168, 76, 0.05);
         border: 1px solid var(--border);
@@ -726,18 +611,19 @@
         );
         margin: 16px 0;
       }
-
       #screen-result .card {
         max-height: 90vh;
         overflow-y: auto;
         -webkit-overflow-scrolling: touch;
       }
+      .complete-icon {
+        font-size: 3rem;
+        margin-bottom: 8px;
+      }
     </style>
   </head>
   <body>
-    <!-- ══════════════════════════
-     SCREEN 0 — SETUP
-══════════════════════════ -->
+    <!-- SCREEN 0 — SETUP -->
     <div id="screen-setup" class="screen">
       <div class="hdr">
         <div class="hdr-brand">Ahmadiyya Muslim Jamaat</div>
@@ -774,9 +660,7 @@
       </div>
     </div>
 
-    <!-- ══════════════════════════
-     SCREEN 1 — REGISTRATION
-══════════════════════════ -->
+    <!-- SCREEN 1 — REGISTRATION -->
     <div id="screen-reg" class="screen">
       <div class="hdr">
         <div class="hdr-brand">Ahmadiyya Muslim Jamaat</div>
@@ -836,24 +720,19 @@
       </div>
     </div>
 
-    <!-- ══════════════════════════
-     SCREEN 2 — QUESTION
-══════════════════════════ -->
+    <!-- SCREEN 2 — QUESTION -->
     <div id="screen-q" class="screen">
       <div class="card">
-        <!-- auto-save indicator -->
         <div class="save-dot" id="save-dot">
           <div class="dot"></div>
           <span id="save-txt">সংরক্ষণ প্রস্তুত</span>
         </div>
-
         <div class="prow">
           <div class="ptrack">
             <div class="pfill" id="pf" style="width: 0%"></div>
           </div>
           <div class="plbl" id="qc">১ / ২৭</div>
         </div>
-
         <div class="trow">
           <svg class="tsvg" width="46" height="46" viewBox="0 0 46 46">
             <circle class="ttrack" cx="23" cy="23" r="19" />
@@ -874,11 +753,8 @@
           </div>
           <span class="tbadge" id="tb"></span>
         </div>
-
         <div class="qt" id="qq"></div>
-
         <div id="ma" class="opts"></div>
-
         <div id="fa" style="display: none">
           <p class="fhint">শূন্যস্থানে সঠিক উত্তর লিখুন:</p>
           <div id="fr" class="frows"></div>
@@ -886,7 +762,6 @@
             উত্তর জমা দিন ✓
           </button>
         </div>
-
         <div id="fd" class="fb"></div>
         <button class="btn btn-t" id="nb" style="display: none" onclick="nxt()">
           পরবর্তী প্রশ্ন →
@@ -894,52 +769,18 @@
       </div>
     </div>
 
-    <!-- ══════════════════════════
-     SCREEN 3 — RESULT
-══════════════════════════ -->
+    <!-- SCREEN 3 — RESULT -->
     <div id="screen-result" class="screen">
       <div class="card">
         <div class="res-hero">
-          <div class="sring-wrap">
-            <svg viewBox="0 0 120 120">
-              <circle class="srtrack" cx="60" cy="60" r="52" />
-              <circle
-                class="srfill"
-                id="rr"
-                cx="60"
-                cy="60"
-                r="52"
-                stroke-dasharray="326.7"
-                stroke-dashoffset="326.7"
-              />
-            </svg>
-            <div class="srcenter">
-              <div class="srbig" id="rscore">—</div>
-              <div class="srdenom">/ ২৭</div>
-            </div>
-          </div>
-          <div class="res-pct" id="rpct">—%</div>
+          <div class="complete-icon">🎉</div>
+          <div class="res-title">কুইজ সম্পন্ন!</div>
+          <div class="res-sub">সমস্ত উত্তর সংরক্ষিত হয়েছে।</div>
           <div class="res-who" id="rwho">—</div>
         </div>
-
-        <div class="srow">
-          <div class="sbox">
-            <div class="sv" style="color: var(--green)" id="rok">—</div>
-            <div class="sl">সঠিক</div>
-          </div>
-          <div class="sbox">
-            <div class="sv" style="color: var(--red)" id="rng">—</div>
-            <div class="sl">ভুল</div>
-          </div>
-          <div class="sbox">
-            <div class="sv" style="color: var(--gold)" id="rav">—</div>
-            <div class="sl">গড় সময়</div>
-          </div>
-        </div>
-
         <div class="div"></div>
         <p style="font-size: 0.76rem; color: var(--muted); margin-bottom: 9px">
-          প্রতিটি প্রশ্নের বিবরণ:
+          আপনার প্রদত্ত উত্তরসমূহ:
         </p>
         <div id="al" class="al"></div>
         <div id="substatus" class="ss"></div>
@@ -950,17 +791,16 @@
     </div>
 
     <script>
-      // ── CONFIG — paste your Apps Script URL here ──────────────
-      const HARDCODED_URL = "https://script.google.com/macros/s/AKfycbyRx6yA6Ha44CaaEqzMZH9x63nlKisSgpTA629fPKqelO8lObPBd5A30ZKEyGPFjCsa0w/exec";
-      // ──────────────────────────────────────────────────────────
-
+      // ── CONFIG ────────────────────────────────────────────
+      const HARDCODED_URL =
+        "https://script.google.com/macros/s/AKfycbyRx6yA6Ha44CaaEqzMZH9x63nlKisSgpTA629fPKqelO8lObPBd5A30ZKEyGPFjCsa0w/exec";
+      // ─────────────────────────────────────────────────────
       const SK = "dai_quiz_url";
       let SURL = HARDCODED_URL || localStorage.getItem(SK) || "";
-      const TOTAL = 27; // total number of questions
+      const TOTAL = 27;
+      const CIRC = 2 * Math.PI * 19;
 
-      // ════════════════════════════════════════════════════════
-      //  QUESTION BANK  (27 questions)
-      // ════════════════════════════════════════════════════════
+      // ════ QUESTION BANK ═══════════════════════════════════
       const QS = [
         {
           t: "fill",
@@ -1007,7 +847,7 @@
         },
         {
           t: "mcq",
-          q: "বুখারীর কিতাবুল জানায়েযের হাদিস অনুযায়ী, কারা তাদের নবীদের কবরকে সেজদাগাহে পরিণত করেছে?",
+          q: "বুখারীর কিতাবুল জানায়েযের হাদিস অনুযায়ী, কারা তাদের নবীদের কবরকে সেজদাগাহে পরিণত করেছে?",
           opts: [
             "মুশরিক ও মুনাফিক",
             "ইহুদি ও খ্রিষ্টান",
@@ -1018,7 +858,7 @@
         },
         {
           t: "fill",
-          q: 'সূরা আলে ইমরান: ৫৬ আয়াতে "ওয়াও আতেফা" দ্বারা কয়টি ওয়াদা ধারাবাহিকভাবে একটির পর একটি পূর্ণ হবে? উত্তর: ______',
+          q: 'সূরা আলে ইমরান: ৫৬ আয়াতে "ওয়াও আতেফা" দ্বারা কয়টি ওয়াদা ধারাবাহিকভাবে একটির পর একটি পূর্ণ হবে? উত্তর: ______',
           blanks: 1,
           labels: ["বিশেষণ"],
           ans: ["৪ টি"],
@@ -1186,39 +1026,34 @@
         },
       ];
 
-      // ════════════════════════════════════════════════════════
-      //  STATE
-      // ════════════════════════════════════════════════════════
+      // ════ STATE ═══════════════════════════════════════════
       let P = {},
         sessionId = "",
+        startTime = "",
         qi = 0,
-        score = 0,
         answered = false,
         startTs = 0,
         timerInt = null,
-        timeLeft = 0,
-        log = [];
-      const CIRC = 2 * Math.PI * 19;
+        timeLeft = 0;
+      // answers[i] = given answer string for question i (undefined if not yet answered)
+      let answers = new Array(TOTAL).fill(undefined);
 
-      // ════════════════════════════════════════════════════════
-      //  INIT
-      // ════════════════════════════════════════════════════════
+      // ════ INIT ════════════════════════════════════════════
       window.addEventListener("DOMContentLoaded", () => {
         show(SURL ? "screen-reg" : "screen-setup");
       });
-
-      // Save on tab switch / app background / browser close
       document.addEventListener("visibilitychange", () => {
-        if (document.visibilityState === "hidden" && log.length > 0)
+        if (
+          document.visibilityState === "hidden" &&
+          answers.some((a) => a !== undefined)
+        )
           autoSave(false);
       });
       window.addEventListener("pagehide", () => {
-        if (log.length > 0) autoSave(false);
+        if (answers.some((a) => a !== undefined)) autoSave(false);
       });
 
-      // ════════════════════════════════════════════════════════
-      //  SETUP
-      // ════════════════════════════════════════════════════════
+      // ════ SETUP ════════════════════════════════════════════
       function saveUrl() {
         const v = (document.getElementById("surl").value || "").trim();
         if (v) {
@@ -1231,9 +1066,7 @@
         show("screen-reg");
       }
 
-      // ════════════════════════════════════════════════════════
-      //  REGISTRATION
-      // ════════════════════════════════════════════════════════
+      // ════ REGISTRATION ════════════════════════════════════
       function begin() {
         const name = document.getElementById("rn").value.trim();
         const maj = document.getElementById("rm").value.trim();
@@ -1251,12 +1084,11 @@
           return;
         }
         P = { name, majlis: maj, wa };
-        // Unique session ID: timestamp + random
         sessionId =
           Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+        startTime = new Date().toLocaleString("bn-BD");
         qi = 0;
-        score = 0;
-        log = [];
+        answers = new Array(TOTAL).fill(undefined);
         show("screen-q");
         renderQ();
       }
@@ -1268,30 +1100,18 @@
         setTimeout(() => e.classList.remove("err"), 2000);
       }
 
-      // ════════════════════════════════════════════════════════
-      //  AUTO-SAVE — called after EVERY answered question
-      // ════════════════════════════════════════════════════════
+      // ════ AUTO-SAVE ═══════════════════════════════════════
       function autoSave(completed) {
         if (!SURL) return;
         setSaveDot("saving", "সংরক্ষণ হচ্ছে…");
-        const pct = completed
-          ? Math.round((score / TOTAL) * 100)
-          : Math.round((score / log.length) * 100);
         const payload = {
           sessionId,
           name: P.name,
           majlis: P.majlis,
           whatsapp: P.wa,
-          score,
-          total: TOTAL,
-          percentage: pct,
-          answeredCount: log.length,
+          startTime,
           completed,
-          answers: log.map((r) => ({
-            given: r.given,
-            correct: r.correct,
-            timeTaken: r.timeTaken,
-          })),
+          answers: answers.map((a) => (a !== undefined ? a : "")),
         };
         fetch(SURL, {
           method: "POST",
@@ -1300,11 +1120,12 @@
           body: JSON.stringify(payload),
         })
           .then(() => {
+            const done = answers.filter((a) => a !== undefined).length;
             setSaveDot(
               "saved",
               completed
                 ? "সম্পন্ন ও সংরক্ষিত ✓"
-                : "সংরক্ষিত ✓ (" + log.length + "/" + TOTAL + ")",
+                : "সংরক্ষিত ✓ (" + done + "/" + TOTAL + ")",
             );
             setTimeout(() => setSaveDot("", ""), 3000);
           })
@@ -1313,16 +1134,13 @@
             setTimeout(() => setSaveDot("", ""), 4000);
           });
       }
-
       function setSaveDot(state, msg) {
         const el = document.getElementById("save-dot");
         el.className = "save-dot" + (state ? " " + state : "");
         document.getElementById("save-txt").textContent = msg || "";
       }
 
-      // ════════════════════════════════════════════════════════
-      //  RENDER QUESTION
-      // ════════════════════════════════════════════════════════
+      // ════ RENDER QUESTION ═════════════════════════════════
       function renderQ() {
         const q = QS[qi];
         answered = false;
@@ -1335,7 +1153,6 @@
         const nb = document.getElementById("nb");
         nb.style.display = "none";
         nb.textContent = qi < TOTAL - 1 ? "পরবর্তী প্রশ্ন →" : "ফলাফল দেখুন →";
-
         if (q.t === "mcq") {
           document.getElementById("tb").textContent = "🔘 MCQ";
           document.getElementById("tb").className = "tbadge bm";
@@ -1354,7 +1171,7 @@
         startTs = Date.now();
       }
 
-      // ── MCQ ───────────────────────────────────────────────
+      // ── MCQ ──────────────────────────────────────────────
       function buildMCQ(q) {
         const a = document.getElementById("ma");
         a.innerHTML = "";
@@ -1374,26 +1191,15 @@
         if (answered) return;
         answered = true;
         clearInterval(timerInt);
-        const took = elap(),
-          ok = chosen === q.ans;
-        if (ok) score++;
-        log.push({
-          q: qi + 1,
-          type: "MCQ",
-          given: q.opts[chosen],
-          correctAns: q.opts[q.ans],
-          correct: ok,
-          timeTaken: took,
-        });
+        answers[qi] = q.opts[chosen];
         const opts = document.querySelectorAll(".opt");
         opts.forEach((o) => o.classList.add("dis"));
-        opts[chosen].classList.add(ok ? "ok" : "ng");
-        if (!ok) opts[q.ans].classList.add("rv");
-        showFB(ok, q.opts[q.ans], false);
-        autoSave(false); // ← save immediately after answer
+        opts[chosen].classList.add("sel"); // neutral teal highlight, no correct/wrong colour
+        showFB(false, null, false, true); // neutral feedback
+        autoSave(false);
       }
 
-      // ── Fill ──────────────────────────────────────────────
+      // ── Fill ─────────────────────────────────────────────
       function buildFill(q) {
         const w = document.getElementById("fr");
         w.innerHTML = "";
@@ -1401,7 +1207,7 @@
           const r = document.createElement("div");
           r.className = "frow";
           r.innerHTML = `<label class="flbl">${q.labels[i]}</label>
-      <input class="finp" id="fi${i}" type="text" placeholder="এখানে লিখুন…" autocomplete="off">`;
+            <input class="finp" id="fi${i}" type="text" placeholder="এখানে লিখুন…" autocomplete="off">`;
           w.appendChild(r);
         }
         document.getElementById("fb2").disabled = false;
@@ -1431,45 +1237,30 @@
         if (answered) return;
         answered = true;
         clearInterval(timerInt);
-        const took = elap();
         document.getElementById("fb2").disabled = true;
-        const norm = (s) =>
-          s.toLowerCase().replace(/\s+/g, " ").replace(/[।,.]/g, "").trim();
-        let allOk = !timedOut;
-        if (!timedOut) {
-          vals.forEach((v, i) => {
-            const inp = document.getElementById("fi" + i);
-            if (inp) inp.disabled = true;
-            const ok =
-              norm(v) === norm(q.ans[i]) ||
-              norm(q.ans[i]).includes(norm(v)) ||
-              norm(v).includes(norm(q.ans[i]));
-            if (inp) inp.classList.add(ok ? "ok" : "bad");
-            if (!ok) allOk = false;
-          });
-        } else {
+        if (timedOut) {
+          answers[qi] = "(সময় শেষ)";
           for (let i = 0; i < q.blanks; i++) {
             const inp = document.getElementById("fi" + i);
             if (inp) {
               inp.disabled = true;
-              inp.classList.add("bad");
             }
           }
+        } else {
+          answers[qi] = vals.join(" / ");
+          for (let i = 0; i < q.blanks; i++) {
+            const inp = document.getElementById("fi" + i);
+            if (inp) {
+              inp.disabled = true;
+              inp.classList.add("sub");
+            } // neutral teal style
+          }
         }
-        if (allOk) score++;
-        log.push({
-          q: qi + 1,
-          type: "শূন্যস্থান",
-          given: timedOut ? "(সময় শেষ)" : vals.join(" / "),
-          correctAns: q.ans.join(" / "),
-          correct: allOk,
-          timeTaken: took,
-        });
-        showFB(allOk, q.ans.join(" / "), timedOut);
-        autoSave(false); // ← save immediately after answer
+        showFB(false, null, timedOut, !timedOut);
+        autoSave(false);
       }
 
-      // ── Timer ─────────────────────────────────────────────
+      // ── Timer ────────────────────────────────────────────
       function startTimer(s) {
         clearInterval(timerInt);
         timeLeft = s;
@@ -1495,19 +1286,11 @@
         const q = QS[qi];
         if (q.t === "mcq") {
           answered = true;
-          log.push({
-            q: qi + 1,
-            type: "MCQ",
-            given: "(সময় শেষ)",
-            correctAns: q.opts[q.ans],
-            correct: false,
-            timeTaken: elap(),
-          });
+          answers[qi] = "(সময় শেষ)";
           document
             .querySelectorAll(".opt")
             .forEach((o) => o.classList.add("dis"));
-          document.querySelectorAll(".opt")[q.ans].classList.add("rv");
-          showFB(false, q.opts[q.ans], true);
+          showFB(false, null, true, false);
           autoSave(false);
         } else {
           const vals = [];
@@ -1520,18 +1303,15 @@
         return Math.min(Math.round((Date.now() - startTs) / 1000), 99);
       }
 
-      // ── Feedback ──────────────────────────────────────────
-      function showFB(ok, ca, to) {
+      // ── Feedback (neutral — no correct answer revealed) ──
+      function showFB(ok, ca, timedOut, submitted) {
         const fd = document.getElementById("fd");
-        if (to) {
+        if (timedOut) {
           fd.className = "fb ft";
-          fd.innerHTML = `<div class="fbi">⏱️</div>সময় শেষ!<div class="fba">সঠিক উত্তর: ${ca}</div>`;
-        } else if (ok) {
-          fd.className = "fb fc";
-          fd.innerHTML = `<div class="fbi">✅</div>চমৎকার! উত্তর সঠিক।`;
+          fd.innerHTML = `<div class="fbi">⏱️</div>সময় শেষ! পরবর্তী প্রশ্নে যান।`;
         } else {
-          fd.className = "fb fw";
-          fd.innerHTML = `<div class="fbi">❌</div>উত্তরটি সঠিক হয়নি।<div class="fba">সঠিক উত্তর: ${ca}</div>`;
+          fd.className = "fb fn";
+          fd.innerHTML = `<div class="fbi">✅</div>উত্তর নথিভুক্ত হয়েছে।`;
         }
         fd.style.display = "block";
         document.getElementById("nb").style.display = "block";
@@ -1541,61 +1321,46 @@
         );
       }
 
-      // ── Navigation ────────────────────────────────────────
+      // ── Navigation ───────────────────────────────────────
       function nxt() {
         qi++;
         if (qi >= TOTAL) showResult();
         else renderQ();
       }
 
-      // ════════════════════════════════════════════════════════
-      //  RESULTS
-      // ════════════════════════════════════════════════════════
+      // ════ RESULTS ═════════════════════════════════════════
       function showResult() {
-        // Final save with completed=true
         autoSave(true);
         show("screen-result");
-        const pct = Math.round((score / TOTAL) * 100);
-        const avg = Math.round(
-          log.reduce((s, r) => s + r.timeTaken, 0) / log.length,
-        );
-        setTimeout(() => {
-          document.getElementById("rr").style.strokeDashoffset =
-            326.7 * (1 - pct / 100);
-        }, 200);
-        document.getElementById("rscore").textContent = score;
-        document.getElementById("rpct").textContent = pct + "%";
         document.getElementById("rwho").textContent = P.name + " · " + P.majlis;
-        document.getElementById("rok").textContent = score;
-        document.getElementById("rng").textContent = TOTAL - score;
-        document.getElementById("rav").textContent = avg + "s";
-
         const al = document.getElementById("al");
         al.innerHTML = "";
-        log.forEach((r) => {
+        QS.forEach((q, idx) => {
+          const given = answers[idx] !== undefined ? answers[idx] : "—";
           const d = document.createElement("div");
           d.className = "ai";
-          d.innerHTML = `<div class="an">${r.q}</div>
-    <div class="ab">
-      <span class="atp ${r.correct ? "aok" : "afl"}">${r.correct ? "✓ সঠিক" : "✗ ভুল"}</span>
-      <span class="atp" style="background:rgba(255,255,255,.05);color:var(--muted);margin-left:3px">${r.type}</span><br>
-      <span style="color:var(--muted)">আপনার: </span>${r.given}<br>
-      ${!r.correct ? `<span class="acv">সঠিক: ${r.correctAns}</span><br>` : ""}
-      <span class="atm">⏱ ${r.timeTaken}s</span>
-    </div>`;
+          const typeLabel = q.t === "mcq" ? "MCQ" : "শূন্যস্থান";
+          d.innerHTML = `<div class="an">${idx + 1}</div>
+            <div class="ab">
+              <span class="atp" style="background:rgba(255,255,255,.05);color:var(--muted)">${typeLabel}</span><br>
+              <span style="color:var(--muted)">আপনার উত্তর: </span>${given}
+            </div>`;
           al.appendChild(d);
         });
-
-        // Show final sheet status on result screen too
         if (!SURL) {
           const el = document.getElementById("substatus");
           el.style.display = "block";
           el.className = "ss ss-f";
           el.textContent = "⚠️ Script URL নেই। ফলাফল সংরক্ষিত হয়নি।";
+        } else {
+          const el = document.getElementById("substatus");
+          el.style.display = "block";
+          el.className = "ss ss-ok";
+          el.textContent = "✓ আপনার উত্তর সফলভাবে পাঠানো হয়েছে।";
         }
       }
 
-      // ── Util ──────────────────────────────────────────────
+      // ── Util ─────────────────────────────────────────────
       function show(id) {
         document
           .querySelectorAll(".screen")
