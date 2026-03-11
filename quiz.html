@@ -1,656 +1,1608 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="bn">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>দাই ইলাল্লাহ কুইজ</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Bengali:wght@400;600;700&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
-<style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-html{height:100%}
-body{
-  font-family:'Noto Serif Bengali',serif;
-  background:#0d1b2a;color:#e8dfc8;
-  min-height:100%;display:flex;flex-direction:column;align-items:center;
-  padding:0 0 48px;overflow-x:hidden;
-}
-:root{
-  --bg:#0d1b2a;--card:#15293f;--gold:#c9a84c;--gold2:#e8c87a;
-  --teal:#2ec4b6;--green:#27ae60;--red:#e74c3c;--orange:#e67e22;
-  --text:#e8dfc8;--muted:#7a8fa6;--border:rgba(201,168,76,.2);--r:16px;
-}
-.screen{display:none;width:100%;max-width:460px;padding:14px 14px 0;animation:fu .3s ease both}
-.screen.active{display:block}
-@keyframes fu{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>দাই ইলাল্লাহ কুইজ</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Serif+Bengali:wght@400;600;700&family=Amiri:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        -webkit-tap-highlight-color: transparent;
+      }
+      html {
+        height: 100%;
+      }
+      body {
+        font-family: "Noto Serif Bengali", serif;
+        background: #0d1b2a;
+        color: #e8dfc8;
+        min-height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 0 0 48px;
+        overflow-x: hidden;
+      }
+      :root {
+        --bg: #0d1b2a;
+        --card: #15293f;
+        --gold: #c9a84c;
+        --gold2: #e8c87a;
+        --teal: #2ec4b6;
+        --green: #27ae60;
+        --red: #e74c3c;
+        --orange: #e67e22;
+        --text: #e8dfc8;
+        --muted: #7a8fa6;
+        --border: rgba(201, 168, 76, 0.2);
+        --r: 16px;
+      }
+      .screen {
+        display: none;
+        width: 100%;
+        max-width: 460px;
+        padding: 14px 14px 0;
+        animation: fu 0.3s ease both;
+      }
+      .screen.active {
+        display: block;
+      }
+      @keyframes fu {
+        from {
+          opacity: 0;
+          transform: translateY(16px);
+        }
+        to {
+          opacity: 1;
+          transform: none;
+        }
+      }
 
-.card{
-  background:var(--card);border:1px solid var(--border);
-  border-radius:var(--r);padding:24px 20px;
-  box-shadow:0 10px 40px rgba(0,0,0,.45);position:relative;overflow:hidden;
-}
-.card::before{
-  content:'';position:absolute;top:0;left:0;right:0;height:3px;
-  background:linear-gradient(90deg,transparent,var(--gold),var(--teal),transparent);
-}
+      .card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--r);
+        padding: 24px 20px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.45);
+        position: relative;
+        overflow: hidden;
+      }
+      .card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          var(--gold),
+          var(--teal),
+          transparent
+        );
+      }
 
-.hdr{text-align:center;padding:22px 14px 0}
-.hdr-brand{font-family:'Amiri',serif;font-size:12px;letter-spacing:2px;color:var(--gold);opacity:.8;text-transform:uppercase;margin-bottom:5px}
-.hdr-title{font-family:'Amiri',serif;font-size:1.5rem;color:var(--gold2);font-weight:700;margin-bottom:3px}
-.hdr-sub{color:var(--muted);font-size:.8rem;margin-bottom:18px}
+      .hdr {
+        text-align: center;
+        padding: 22px 14px 0;
+      }
+      .hdr-brand {
+        font-family: "Amiri", serif;
+        font-size: 12px;
+        letter-spacing: 2px;
+        color: var(--gold);
+        opacity: 0.8;
+        text-transform: uppercase;
+        margin-bottom: 5px;
+      }
+      .hdr-title {
+        font-family: "Amiri", serif;
+        font-size: 1.5rem;
+        color: var(--gold2);
+        font-weight: 700;
+        margin-bottom: 3px;
+      }
+      .hdr-sub {
+        color: var(--muted);
+        font-size: 0.8rem;
+        margin-bottom: 18px;
+      }
 
-.fg{margin-bottom:15px}
-.fl{display:block;font-size:.76rem;color:var(--gold);margin-bottom:6px;font-weight:600;letter-spacing:.3px}
-.fi{
-  width:100%;background:rgba(255,255,255,.05);
-  border:1.5px solid rgba(201,168,76,.2);border-radius:10px;
-  padding:13px 15px;color:var(--text);
-  font-family:'Noto Serif Bengali',serif;font-size:1rem;
-  outline:none;transition:border-color .2s;-webkit-appearance:none;
-}
-.fi:focus{border-color:var(--gold)}
-.fi::placeholder{color:var(--muted);font-size:.87rem}
-.fi.err{border-color:var(--red)}
+      .fg {
+        margin-bottom: 15px;
+      }
+      .fl {
+        display: block;
+        font-size: 0.76rem;
+        color: var(--gold);
+        margin-bottom: 6px;
+        font-weight: 600;
+        letter-spacing: 0.3px;
+      }
+      .fi {
+        width: 100%;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1.5px solid rgba(201, 168, 76, 0.2);
+        border-radius: 10px;
+        padding: 13px 15px;
+        color: var(--text);
+        font-family: "Noto Serif Bengali", serif;
+        font-size: 1rem;
+        outline: none;
+        transition: border-color 0.2s;
+        -webkit-appearance: none;
+      }
+      .fi:focus {
+        border-color: var(--gold);
+      }
+      .fi::placeholder {
+        color: var(--muted);
+        font-size: 0.87rem;
+      }
+      .fi.err {
+        border-color: var(--red);
+      }
 
-.rules{display:flex;gap:8px;margin:16px 0;padding:13px;background:rgba(46,196,182,.07);border:1px solid rgba(46,196,182,.18);border-radius:10px}
-.rp{flex:1;text-align:center;font-size:.75rem;color:var(--teal);line-height:1.5}
-.rp strong{display:block;font-size:.98rem;color:var(--gold2)}
+      .rules {
+        display: flex;
+        gap: 8px;
+        margin: 16px 0;
+        padding: 13px;
+        background: rgba(46, 196, 182, 0.07);
+        border: 1px solid rgba(46, 196, 182, 0.18);
+        border-radius: 10px;
+      }
+      .rp {
+        flex: 1;
+        text-align: center;
+        font-size: 0.75rem;
+        color: var(--teal);
+        line-height: 1.5;
+      }
+      .rp strong {
+        display: block;
+        font-size: 0.98rem;
+        color: var(--gold2);
+      }
 
-.btn{display:block;width:100%;padding:14px;border:none;border-radius:10px;font-family:'Noto Serif Bengali',serif;font-size:1rem;font-weight:700;cursor:pointer;transition:all .2s;text-align:center}
-.btn-g{background:linear-gradient(135deg,#c9a84c,#8a6020);color:#0d1b2a}
-.btn-g:hover{transform:translateY(-1px);box-shadow:0 5px 18px rgba(201,168,76,.3)}
-.btn-g:active{transform:none}
-.btn-g:disabled{opacity:.45;cursor:not-allowed;transform:none;box-shadow:none}
-.btn-t{background:var(--teal);color:#0d1b2a;margin-top:14px}
-.btn-t:hover{background:#3dd6c8}
+      .btn {
+        display: block;
+        width: 100%;
+        padding: 14px;
+        border: none;
+        border-radius: 10px;
+        font-family: "Noto Serif Bengali", serif;
+        font-size: 1rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.2s;
+        text-align: center;
+      }
+      .btn-g {
+        background: linear-gradient(135deg, #c9a84c, #8a6020);
+        color: #0d1b2a;
+      }
+      .btn-g:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 5px 18px rgba(201, 168, 76, 0.3);
+      }
+      .btn-g:active {
+        transform: none;
+      }
+      .btn-g:disabled {
+        opacity: 0.45;
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: none;
+      }
+      .btn-t {
+        background: var(--teal);
+        color: #0d1b2a;
+        margin-top: 14px;
+      }
+      .btn-t:hover {
+        background: #3dd6c8;
+      }
 
-/* Save indicator */
-.save-dot{
-  display:flex;align-items:center;gap:6px;
-  font-size:.72rem;color:var(--muted);
-  margin-bottom:14px;padding:7px 12px;
-  background:rgba(0,0,0,.2);border-radius:8px;
-  transition:all .3s;
-}
-.save-dot .dot{
-  width:7px;height:7px;border-radius:50%;
-  background:var(--muted);flex-shrink:0;
-  transition:background .3s;
-}
-.save-dot.saving .dot{background:var(--orange);animation:pulse .8s infinite}
-.save-dot.saved  .dot{background:var(--green)}
-.save-dot.saving{color:var(--orange)}
-.save-dot.saved {color:var(--green)}
-.save-dot.error .dot{background:var(--red)}
-.save-dot.error{color:var(--red)}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+      /* Save indicator */
+      .save-dot {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 0.72rem;
+        color: var(--muted);
+        margin-bottom: 14px;
+        padding: 7px 12px;
+        background: rgba(0, 0, 0, 0.2);
+        border-radius: 8px;
+        transition: all 0.3s;
+      }
+      .save-dot .dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: var(--muted);
+        flex-shrink: 0;
+        transition: background 0.3s;
+      }
+      .save-dot.saving .dot {
+        background: var(--orange);
+        animation: pulse 0.8s infinite;
+      }
+      .save-dot.saved .dot {
+        background: var(--green);
+      }
+      .save-dot.saving {
+        color: var(--orange);
+      }
+      .save-dot.saved {
+        color: var(--green);
+      }
+      .save-dot.error .dot {
+        background: var(--red);
+      }
+      .save-dot.error {
+        color: var(--red);
+      }
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.35;
+        }
+      }
 
-.prow{display:flex;align-items:center;gap:10px;margin-bottom:14px}
-.ptrack{flex:1;height:6px;background:rgba(255,255,255,.07);border-radius:4px;overflow:hidden}
-.pfill{height:100%;background:linear-gradient(90deg,var(--teal),var(--gold));border-radius:4px;transition:width .5s}
-.plbl{font-size:.73rem;color:var(--muted);white-space:nowrap;font-family:'Amiri',serif}
+      .prow {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 14px;
+      }
+      .ptrack {
+        flex: 1;
+        height: 6px;
+        background: rgba(255, 255, 255, 0.07);
+        border-radius: 4px;
+        overflow: hidden;
+      }
+      .pfill {
+        height: 100%;
+        background: linear-gradient(90deg, var(--teal), var(--gold));
+        border-radius: 4px;
+        transition: width 0.5s;
+      }
+      .plbl {
+        font-size: 0.73rem;
+        color: var(--muted);
+        white-space: nowrap;
+        font-family: "Amiri", serif;
+      }
 
-.trow{display:flex;align-items:center;gap:11px;background:rgba(0,0,0,.2);border-radius:10px;padding:9px 13px;margin-bottom:16px}
-.tsvg{flex-shrink:0}
-.ttrack{fill:none;stroke:rgba(255,255,255,.08);stroke-width:3.5}
-.tfill{fill:none;stroke-width:3.5;stroke-linecap:round;transform-origin:center;transform:rotate(-90deg);transition:stroke-dashoffset 1s linear,stroke .4s}
-.tnum{fill:var(--text);font-size:11px;dominant-baseline:middle;text-anchor:middle;font-family:'Amiri',serif}
-.tinfo{font-size:.78rem;color:var(--muted);line-height:1.5}
-.tinfo strong{color:var(--text);font-size:1rem}
-.tbadge{margin-left:auto;font-size:.68rem;padding:3px 9px;border-radius:20px;font-family:'Amiri',serif;letter-spacing:.5px}
-.bm{background:rgba(46,196,182,.15);color:var(--teal);border:1px solid rgba(46,196,182,.3)}
-.bf{background:rgba(201,168,76,.15);color:var(--gold);border:1px solid rgba(201,168,76,.3)}
+      .trow {
+        display: flex;
+        align-items: center;
+        gap: 11px;
+        background: rgba(0, 0, 0, 0.2);
+        border-radius: 10px;
+        padding: 9px 13px;
+        margin-bottom: 16px;
+      }
+      .tsvg {
+        flex-shrink: 0;
+      }
+      .ttrack {
+        fill: none;
+        stroke: rgba(255, 255, 255, 0.08);
+        stroke-width: 3.5;
+      }
+      .tfill {
+        fill: none;
+        stroke-width: 3.5;
+        stroke-linecap: round;
+        transform-origin: center;
+        transform: rotate(-90deg);
+        transition:
+          stroke-dashoffset 1s linear,
+          stroke 0.4s;
+      }
+      .tnum {
+        fill: var(--text);
+        font-size: 11px;
+        dominant-baseline: middle;
+        text-anchor: middle;
+        font-family: "Amiri", serif;
+      }
+      .tinfo {
+        font-size: 0.78rem;
+        color: var(--muted);
+        line-height: 1.5;
+      }
+      .tinfo strong {
+        color: var(--text);
+        font-size: 1rem;
+      }
+      .tbadge {
+        margin-left: auto;
+        font-size: 0.68rem;
+        padding: 3px 9px;
+        border-radius: 20px;
+        font-family: "Amiri", serif;
+        letter-spacing: 0.5px;
+      }
+      .bm {
+        background: rgba(46, 196, 182, 0.15);
+        color: var(--teal);
+        border: 1px solid rgba(46, 196, 182, 0.3);
+      }
+      .bf {
+        background: rgba(201, 168, 76, 0.15);
+        color: var(--gold);
+        border: 1px solid rgba(201, 168, 76, 0.3);
+      }
 
-.qt{font-size:.98rem;line-height:1.8;font-weight:600;color:var(--text);margin-bottom:18px;padding-bottom:15px;border-bottom:1px solid var(--border)}
+      .qt {
+        font-size: 0.98rem;
+        line-height: 1.8;
+        font-weight: 600;
+        color: var(--text);
+        margin-bottom: 18px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid var(--border);
+      }
 
-.opts{display:flex;flex-direction:column;gap:9px}
-.opt{display:flex;align-items:flex-start;gap:11px;background:rgba(255,255,255,.04);border:1.5px solid rgba(255,255,255,.09);border-radius:11px;padding:12px 13px;cursor:pointer;transition:all .15s;font-size:.92rem;line-height:1.55;-webkit-user-select:none;user-select:none}
-.opt:active:not(.dis){transform:scale(.98);background:rgba(201,168,76,.08)}
-.opt.hl:not(.dis){border-color:var(--gold);background:rgba(201,168,76,.06)}
-.opt.ok{border-color:var(--green)!important;background:rgba(39,174,96,.12)!important}
-.opt.ng{border-color:var(--red)!important;background:rgba(231,76,60,.1)!important}
-.opt.rv{border-color:var(--green)!important;background:rgba(39,174,96,.08)!important}
-.opt.dis{cursor:default}
-.ol{width:27px;height:27px;flex-shrink:0;border-radius:50%;background:rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;font-family:'Amiri',serif;font-size:.78rem;margin-top:1px;transition:background .15s}
-.opt.ok .ol{background:var(--green);color:#fff}
-.opt.ng .ol{background:var(--red);color:#fff}
-.opt.rv .ol{background:var(--green);color:#fff}
+      .opts {
+        display: flex;
+        flex-direction: column;
+        gap: 9px;
+      }
+      .opt {
+        display: flex;
+        align-items: flex-start;
+        gap: 11px;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1.5px solid rgba(255, 255, 255, 0.09);
+        border-radius: 11px;
+        padding: 12px 13px;
+        cursor: pointer;
+        transition: all 0.15s;
+        font-size: 0.92rem;
+        line-height: 1.55;
+        -webkit-user-select: none;
+        user-select: none;
+      }
+      .opt:active:not(.dis) {
+        transform: scale(0.98);
+        background: rgba(201, 168, 76, 0.08);
+      }
+      .opt.hl:not(.dis) {
+        border-color: var(--gold);
+        background: rgba(201, 168, 76, 0.06);
+      }
+      .opt.ok {
+        border-color: var(--green) !important;
+        background: rgba(39, 174, 96, 0.12) !important;
+      }
+      .opt.ng {
+        border-color: var(--red) !important;
+        background: rgba(231, 76, 60, 0.1) !important;
+      }
+      .opt.rv {
+        border-color: var(--green) !important;
+        background: rgba(39, 174, 96, 0.08) !important;
+      }
+      .opt.dis {
+        cursor: default;
+      }
+      .ol {
+        width: 27px;
+        height: 27px;
+        flex-shrink: 0;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.08);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: "Amiri", serif;
+        font-size: 0.78rem;
+        margin-top: 1px;
+        transition: background 0.15s;
+      }
+      .opt.ok .ol {
+        background: var(--green);
+        color: #fff;
+      }
+      .opt.ng .ol {
+        background: var(--red);
+        color: #fff;
+      }
+      .opt.rv .ol {
+        background: var(--green);
+        color: #fff;
+      }
 
-.fhint{font-size:.77rem;color:var(--muted);margin-bottom:11px}
-.frows{display:flex;flex-direction:column;gap:10px;margin-bottom:13px}
-.frow{display:flex;flex-direction:column;gap:4px}
-.flbl{font-size:.73rem;color:var(--gold);letter-spacing:.3px}
-.finp{width:100%;background:rgba(255,255,255,.05);border:1.5px solid rgba(201,168,76,.2);border-radius:9px;padding:12px 13px;color:var(--text);font-family:'Noto Serif Bengali',serif;font-size:.96rem;outline:none;transition:border-color .2s;-webkit-appearance:none}
-.finp:focus{border-color:var(--gold)}
-.finp.ok{border-color:var(--green);background:rgba(39,174,96,.07)}
-.finp.bad{border-color:var(--red);background:rgba(231,76,60,.07)}
-.finp:disabled{opacity:.7}
-.sbtn{display:block;width:100%;padding:12px;border:none;border-radius:9px;background:rgba(201,168,76,.14);border:1px solid rgba(201,168,76,.28);color:var(--gold2);font-family:'Noto Serif Bengali',serif;font-size:.92rem;font-weight:600;cursor:pointer;transition:all .2s}
-.sbtn:hover:not(:disabled){background:rgba(201,168,76,.24)}
-.sbtn:disabled{opacity:.4;cursor:default}
+      .fhint {
+        font-size: 0.77rem;
+        color: var(--muted);
+        margin-bottom: 11px;
+      }
+      .frows {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-bottom: 13px;
+      }
+      .frow {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+      .flbl {
+        font-size: 0.73rem;
+        color: var(--gold);
+        letter-spacing: 0.3px;
+      }
+      .finp {
+        width: 100%;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1.5px solid rgba(201, 168, 76, 0.2);
+        border-radius: 9px;
+        padding: 12px 13px;
+        color: var(--text);
+        font-family: "Noto Serif Bengali", serif;
+        font-size: 0.96rem;
+        outline: none;
+        transition: border-color 0.2s;
+        -webkit-appearance: none;
+      }
+      .finp:focus {
+        border-color: var(--gold);
+      }
+      .finp.ok {
+        border-color: var(--green);
+        background: rgba(39, 174, 96, 0.07);
+      }
+      .finp.bad {
+        border-color: var(--red);
+        background: rgba(231, 76, 60, 0.07);
+      }
+      .finp:disabled {
+        opacity: 0.7;
+      }
+      .sbtn {
+        display: block;
+        width: 100%;
+        padding: 12px;
+        border: none;
+        border-radius: 9px;
+        background: rgba(201, 168, 76, 0.14);
+        border: 1px solid rgba(201, 168, 76, 0.28);
+        color: var(--gold2);
+        font-family: "Noto Serif Bengali", serif;
+        font-size: 0.92rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .sbtn:hover:not(:disabled) {
+        background: rgba(201, 168, 76, 0.24);
+      }
+      .sbtn:disabled {
+        opacity: 0.4;
+        cursor: default;
+      }
 
-.fb{display:none;margin-top:15px;padding:13px 15px;border-radius:10px;font-size:.87rem;line-height:1.65;animation:fu .25s ease}
-.fc{background:rgba(39,174,96,.1);border:1px solid rgba(39,174,96,.3)}
-.fw{background:rgba(231,76,60,.08);border:1px solid rgba(231,76,60,.25)}
-.ft{background:rgba(201,168,76,.07);border:1px solid rgba(201,168,76,.22)}
-.fbi{font-size:1.15rem;margin-bottom:3px}
-.fba{color:var(--gold2);font-weight:700;margin-top:3px}
+      .fb {
+        display: none;
+        margin-top: 15px;
+        padding: 13px 15px;
+        border-radius: 10px;
+        font-size: 0.87rem;
+        line-height: 1.65;
+        animation: fu 0.25s ease;
+      }
+      .fc {
+        background: rgba(39, 174, 96, 0.1);
+        border: 1px solid rgba(39, 174, 96, 0.3);
+      }
+      .fw {
+        background: rgba(231, 76, 60, 0.08);
+        border: 1px solid rgba(231, 76, 60, 0.25);
+      }
+      .ft {
+        background: rgba(201, 168, 76, 0.07);
+        border: 1px solid rgba(201, 168, 76, 0.22);
+      }
+      .fbi {
+        font-size: 1.15rem;
+        margin-bottom: 3px;
+      }
+      .fba {
+        color: var(--gold2);
+        font-weight: 700;
+        margin-top: 3px;
+      }
 
-/* results */
-.sring-wrap{width:120px;height:120px;margin:0 auto 14px;position:relative}
-.sring-wrap svg{width:100%;height:100%}
-.srtrack{fill:none;stroke:rgba(255,255,255,.07);stroke-width:8}
-.srfill{fill:none;stroke-width:8;stroke-linecap:round;transform-origin:center;transform:rotate(-90deg);stroke:var(--gold);transition:stroke-dashoffset 1.2s ease}
-.srcenter{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
-.srbig{font-family:'Amiri',serif;font-size:1.9rem;color:var(--gold2);line-height:1}
-.srdenom{font-size:.75rem;color:var(--muted)}
-.res-hero{text-align:center;padding:20px 0 16px}
-.res-pct{font-size:1.4rem;color:var(--gold2);font-weight:700}
-.res-who{font-size:.85rem;color:var(--muted);margin-top:2px}
-.srow{display:flex;gap:8px;margin-bottom:18px}
-.sbox{flex:1;text-align:center;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:10px;padding:11px 6px}
-.sv{font-family:'Amiri',serif;font-size:1.35rem}
-.sl{font-size:.68rem;color:var(--muted);margin-top:2px}
-.al{display:flex;flex-direction:column;gap:7px;margin-bottom:18px}
-.ai{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:8px;padding:9px 12px;font-size:.78rem;display:flex;gap:9px;align-items:flex-start}
-.an{font-family:'Amiri',serif;font-size:.82rem;color:var(--muted);min-width:20px;padding-top:1px}
-.ab{flex:1;line-height:1.55}
-.aok{background:rgba(39,174,96,.15);color:var(--green)}
-.afl{background:rgba(231,76,60,.12);color:var(--red)}
-.atp{font-size:.65rem;border-radius:4px;padding:1px 5px;font-family:'Amiri',serif}
-.acv{color:var(--gold);font-weight:600}
-.atm{color:var(--muted);font-size:.7rem}
+      /* results */
+      .sring-wrap {
+        width: 120px;
+        height: 120px;
+        margin: 0 auto 14px;
+        position: relative;
+      }
+      .sring-wrap svg {
+        width: 100%;
+        height: 100%;
+      }
+      .srtrack {
+        fill: none;
+        stroke: rgba(255, 255, 255, 0.07);
+        stroke-width: 8;
+      }
+      .srfill {
+        fill: none;
+        stroke-width: 8;
+        stroke-linecap: round;
+        transform-origin: center;
+        transform: rotate(-90deg);
+        stroke: var(--gold);
+        transition: stroke-dashoffset 1.2s ease;
+      }
+      .srcenter {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      }
+      .srbig {
+        font-family: "Amiri", serif;
+        font-size: 1.9rem;
+        color: var(--gold2);
+        line-height: 1;
+      }
+      .srdenom {
+        font-size: 0.75rem;
+        color: var(--muted);
+      }
+      .res-hero {
+        text-align: center;
+        padding: 20px 0 16px;
+      }
+      .res-pct {
+        font-size: 1.4rem;
+        color: var(--gold2);
+        font-weight: 700;
+      }
+      .res-who {
+        font-size: 0.85rem;
+        color: var(--muted);
+        margin-top: 2px;
+      }
+      .srow {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 18px;
+      }
+      .sbox {
+        flex: 1;
+        text-align: center;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 11px 6px;
+      }
+      .sv {
+        font-family: "Amiri", serif;
+        font-size: 1.35rem;
+      }
+      .sl {
+        font-size: 0.68rem;
+        color: var(--muted);
+        margin-top: 2px;
+      }
+      .al {
+        display: flex;
+        flex-direction: column;
+        gap: 7px;
+        margin-bottom: 18px;
+      }
+      .ai {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.07);
+        border-radius: 8px;
+        padding: 9px 12px;
+        font-size: 0.78rem;
+        display: flex;
+        gap: 9px;
+        align-items: flex-start;
+      }
+      .an {
+        font-family: "Amiri", serif;
+        font-size: 0.82rem;
+        color: var(--muted);
+        min-width: 20px;
+        padding-top: 1px;
+      }
+      .ab {
+        flex: 1;
+        line-height: 1.55;
+      }
+      .aok {
+        background: rgba(39, 174, 96, 0.15);
+        color: var(--green);
+      }
+      .afl {
+        background: rgba(231, 76, 60, 0.12);
+        color: var(--red);
+      }
+      .atp {
+        font-size: 0.65rem;
+        border-radius: 4px;
+        padding: 1px 5px;
+        font-family: "Amiri", serif;
+      }
+      .acv {
+        color: var(--gold);
+        font-weight: 600;
+      }
+      .atm {
+        color: var(--muted);
+        font-size: 0.7rem;
+      }
 
-.ss{padding:12px;border-radius:9px;text-align:center;font-size:.83rem;margin-bottom:14px;display:none}
-.ss-s{background:rgba(46,196,182,.1);color:var(--teal)}
-.ss-ok{background:rgba(39,174,96,.1);color:var(--green)}
-.ss-f{background:rgba(231,76,60,.08);color:var(--red)}
+      .ss {
+        padding: 12px;
+        border-radius: 9px;
+        text-align: center;
+        font-size: 0.83rem;
+        margin-bottom: 14px;
+        display: none;
+      }
+      .ss-s {
+        background: rgba(46, 196, 182, 0.1);
+        color: var(--teal);
+      }
+      .ss-ok {
+        background: rgba(39, 174, 96, 0.1);
+        color: var(--green);
+      }
+      .ss-f {
+        background: rgba(231, 76, 60, 0.08);
+        color: var(--red);
+      }
 
-.setupbox{background:rgba(201,168,76,.05);border:1px solid var(--border);border-radius:10px;padding:15px;font-size:.78rem;color:var(--muted);line-height:1.8;margin-bottom:16px}
-.setupbox strong{color:var(--gold)}
-.setupbox code{background:rgba(0,0,0,.3);padding:1px 5px;border-radius:3px;color:var(--teal);font-size:.74rem}
-.skp{display:block;text-align:center;margin-top:11px;font-size:.76rem;color:var(--teal);cursor:pointer;text-decoration:underline}
-.div{height:1px;background:linear-gradient(90deg,transparent,var(--border),transparent);margin:16px 0}
+      .setupbox {
+        background: rgba(201, 168, 76, 0.05);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 15px;
+        font-size: 0.78rem;
+        color: var(--muted);
+        line-height: 1.8;
+        margin-bottom: 16px;
+      }
+      .setupbox strong {
+        color: var(--gold);
+      }
+      .setupbox code {
+        background: rgba(0, 0, 0, 0.3);
+        padding: 1px 5px;
+        border-radius: 3px;
+        color: var(--teal);
+        font-size: 0.74rem;
+      }
+      .skp {
+        display: block;
+        text-align: center;
+        margin-top: 11px;
+        font-size: 0.76rem;
+        color: var(--teal);
+        cursor: pointer;
+        text-decoration: underline;
+      }
+      .div {
+        height: 1px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          var(--border),
+          transparent
+        );
+        margin: 16px 0;
+      }
 
-#screen-result .card{max-height:90vh;overflow-y:auto;-webkit-overflow-scrolling:touch}
-</style>
-</head>
-<body>
-
-<!-- ══════════════════════════
+      #screen-result .card {
+        max-height: 90vh;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ══════════════════════════
      SCREEN 0 — SETUP
 ══════════════════════════ -->
-<div id="screen-setup" class="screen">
-  <div class="hdr">
-    <div class="hdr-brand">Majlish Khuddamul Ahmadiyya</div>
-    <div class="hdr-title">দাই ইলাল্লাহ কুইজ</div>
-  </div>
-  <div class="card">
-    <div class="setupbox">
-      <strong>⚙️ প্রথমবার সেটআপ</strong><br><br>
-      উত্তর Google Sheets-এ পাঠাতে:<br>
-      <strong>১।</strong> Google Sheet → <code>Extensions → Apps Script</code><br>
-      <strong>২।</strong> HTML ফাইলের উপরের কমেন্টের স্ক্রিপ্ট পেস্ট করুন<br>
-      <strong>৩।</strong> <code>Deploy → New Deployment → Web App</code><br>
-      &nbsp;&nbsp;&nbsp;Execute as: <strong>Me</strong> | Access: <strong>Anyone</strong><br>
-      <strong>৪।</strong> Web App URL কপি করে নিচে পেস্ট করুন
+    <div id="screen-setup" class="screen">
+      <div class="hdr">
+        <div class="hdr-brand">Ahmadiyya Muslim Jamaat</div>
+        <div class="hdr-title">দাই ইলাল্লাহ কুইজ</div>
+      </div>
+      <div class="card">
+        <div class="setupbox">
+          <strong>⚙️ প্রথমবার সেটআপ</strong><br /><br />
+          উত্তর Google Sheets-এ পাঠাতে:<br />
+          <strong>১।</strong> Google Sheet →
+          <code>Extensions → Apps Script</code><br />
+          <strong>২।</strong> HTML ফাইলের উপরের কমেন্টের স্ক্রিপ্ট পেস্ট করুন<br />
+          <strong>৩।</strong> <code>Deploy → New Deployment → Web App</code
+          ><br />
+          &nbsp;&nbsp;&nbsp;Execute as: <strong>Me</strong> | Access:
+          <strong>Anyone</strong><br />
+          <strong>৪।</strong> Web App URL কপি করে নিচে পেস্ট করুন
+        </div>
+        <div class="fg">
+          <label class="fl">Google Apps Script Web App URL</label>
+          <input
+            class="fi"
+            id="surl"
+            type="url"
+            inputmode="url"
+            placeholder="https://script.google.com/macros/s/..."
+            autocomplete="off"
+          />
+        </div>
+        <button class="btn btn-g" onclick="saveUrl()">
+          সংরক্ষণ করুন ও এগিয়ে যান
+        </button>
+        <span class="skp" onclick="goReg()">এখন বাদ দিন →</span>
+      </div>
     </div>
-    <div class="fg">
-      <label class="fl">Google Apps Script Web App URL</label>
-      <input class="fi" id="surl" type="url" inputmode="url" placeholder="https://script.google.com/macros/s/..." autocomplete="off">
-    </div>
-    <button class="btn btn-g" onclick="saveUrl()">সংরক্ষণ করুন ও এগিয়ে যান</button>
-    <span class="skp" onclick="goReg()">এখন বাদ দিন →</span>
-  </div>
-</div>
 
-<!-- ══════════════════════════
+    <!-- ══════════════════════════
      SCREEN 1 — REGISTRATION
 ══════════════════════════ -->
-<div id="screen-reg" class="screen">
-  <div class="hdr">
-    <div class="hdr-brand">Majlish Khuddamul Ahmadiyya</div>
-    <div class="hdr-title">দাই ইলাল্লাহ কুইজ</div>
-    <div class="hdr-sub">শর্ট সিলেবাস — ৩০টি প্রশ্ন</div>
-  </div>
-  <div class="card">
-    <div class="fg">
-      <label class="fl">আপনার নাম *</label>
-      <input class="fi" id="rn" type="text" placeholder="পুরো নাম লিখুন" autocomplete="name">
+    <div id="screen-reg" class="screen">
+      <div class="hdr">
+        <div class="hdr-brand">Ahmadiyya Muslim Jamaat</div>
+        <div class="hdr-title">দাই ইলাল্লাহ কুইজ</div>
+        <div class="hdr-sub">শর্ট সিলেবাস — ২৭টি প্রশ্ন</div>
+      </div>
+      <div class="card">
+        <div class="fg">
+          <label class="fl">আপনার নাম *</label>
+          <input
+            class="fi"
+            id="rn"
+            type="text"
+            placeholder="পুরো নাম লিখুন"
+            autocomplete="name"
+          />
+        </div>
+        <div class="fg">
+          <label class="fl">মজলিস *</label>
+          <input
+            class="fi"
+            id="rm"
+            type="text"
+            placeholder="মজলিসের নাম"
+            autocomplete="off"
+          />
+        </div>
+        <div class="fg">
+          <label class="fl">WhatsApp নম্বর *</label>
+          <input
+            class="fi"
+            id="rw"
+            type="tel"
+            placeholder="01xxxxxxxxx"
+            inputmode="tel"
+            autocomplete="tel"
+          />
+        </div>
+        <div class="div"></div>
+        <div class="rules">
+          <div class="rp"><strong>২৭টি</strong>প্রশ্ন</div>
+          <div class="rp"><strong>২০ সেকেন্ড</strong>MCQ</div>
+          <div class="rp"><strong>৩০ সেকেন্ড</strong>শূন্যস্থান</div>
+        </div>
+        <p
+          style="
+            font-size: 0.76rem;
+            color: var(--muted);
+            margin-bottom: 16px;
+            line-height: 1.65;
+          "
+        >
+          ✦ প্রতিটি প্রশ্নের উত্তরের পরেই স্বয়ংক্রিয়ভাবে সংরক্ষিত হবে<br />
+          ✦ মাঝপথে বন্ধ করলেও আপনার উত্তর হারাবে না
+        </p>
+        <button class="btn btn-g" onclick="begin()">কুইজ শুরু করুন →</button>
+      </div>
     </div>
-    <div class="fg">
-      <label class="fl">মজলিস *</label>
-      <input class="fi" id="rm" type="text" placeholder="মজলিসের নাম" autocomplete="off">
-    </div>
-    <div class="fg">
-      <label class="fl">WhatsApp নম্বর *</label>
-      <input class="fi" id="rw" type="tel" placeholder="01xxxxxxxxx" inputmode="tel" autocomplete="tel">
-    </div>
-    <div class="div"></div>
-    <div class="rules">
-      <div class="rp"><strong>৩০টি</strong>প্রশ্ন</div>
-      <div class="rp"><strong>২০ সেকেন্ড</strong>MCQ</div>
-      <div class="rp"><strong>৩০ সেকেন্ড</strong>শূন্যস্থান</div>
-    </div>
-    <p style="font-size:.76rem;color:var(--muted);margin-bottom:16px;line-height:1.65">
-      ✦ প্রতিটি প্রশ্নের উত্তরের পরেই স্বয়ংক্রিয়ভাবে সংরক্ষিত হবে<br>
-      ✦ মাঝপথে বন্ধ করলেও আপনার উত্তর হারাবে না
-    </p>
-    <button class="btn btn-g" onclick="begin()">কুইজ শুরু করুন →</button>
-  </div>
-</div>
 
-<!-- ══════════════════════════
+    <!-- ══════════════════════════
      SCREEN 2 — QUESTION
 ══════════════════════════ -->
-<div id="screen-q" class="screen">
-  <div class="card">
+    <div id="screen-q" class="screen">
+      <div class="card">
+        <!-- auto-save indicator -->
+        <div class="save-dot" id="save-dot">
+          <div class="dot"></div>
+          <span id="save-txt">সংরক্ষণ প্রস্তুত</span>
+        </div>
 
-    <!-- auto-save indicator -->
-    <div class="save-dot" id="save-dot">
-      <div class="dot"></div>
-      <span id="save-txt">সংরক্ষণ প্রস্তুত</span>
+        <div class="prow">
+          <div class="ptrack">
+            <div class="pfill" id="pf" style="width: 0%"></div>
+          </div>
+          <div class="plbl" id="qc">১ / ২৭</div>
+        </div>
+
+        <div class="trow">
+          <svg class="tsvg" width="46" height="46" viewBox="0 0 46 46">
+            <circle class="ttrack" cx="23" cy="23" r="19" />
+            <circle
+              class="tfill"
+              id="tr"
+              cx="23"
+              cy="23"
+              r="19"
+              stroke-dasharray="119.4"
+              stroke-dashoffset="0"
+              stroke="var(--teal)"
+            />
+            <text class="tnum" id="tn" x="23" y="24">—</text>
+          </svg>
+          <div class="tinfo">
+            সময় বাকি<br /><strong id="ts">—</strong> সেকেন্ড
+          </div>
+          <span class="tbadge" id="tb"></span>
+        </div>
+
+        <div class="qt" id="qq"></div>
+
+        <div id="ma" class="opts"></div>
+
+        <div id="fa" style="display: none">
+          <p class="fhint">শূন্যস্থানে সঠিক উত্তর লিখুন:</p>
+          <div id="fr" class="frows"></div>
+          <button class="sbtn" id="fb2" onclick="subFill()">
+            উত্তর জমা দিন ✓
+          </button>
+        </div>
+
+        <div id="fd" class="fb"></div>
+        <button class="btn btn-t" id="nb" style="display: none" onclick="nxt()">
+          পরবর্তী প্রশ্ন →
+        </button>
+      </div>
     </div>
 
-    <div class="prow">
-      <div class="ptrack"><div class="pfill" id="pf" style="width:0%"></div></div>
-      <div class="plbl" id="qc">১ / ৩০</div>
-    </div>
-
-    <div class="trow">
-      <svg class="tsvg" width="46" height="46" viewBox="0 0 46 46">
-        <circle class="ttrack" cx="23" cy="23" r="19"/>
-        <circle class="tfill" id="tr" cx="23" cy="23" r="19"
-                stroke-dasharray="119.4" stroke-dashoffset="0" stroke="var(--teal)"/>
-        <text class="tnum" id="tn" x="23" y="24">—</text>
-      </svg>
-      <div class="tinfo">সময় বাকি<br><strong id="ts">—</strong> সেকেন্ড</div>
-      <span class="tbadge" id="tb"></span>
-    </div>
-
-    <div class="qt" id="qq"></div>
-
-    <div id="ma" class="opts"></div>
-
-    <div id="fa" style="display:none">
-      <p class="fhint">শূন্যস্থানে সঠিক উত্তর লিখুন:</p>
-      <div id="fr" class="frows"></div>
-      <button class="sbtn" id="fb2" onclick="subFill()">উত্তর জমা দিন ✓</button>
-    </div>
-
-    <div id="fd" class="fb"></div>
-    <button class="btn btn-t" id="nb" style="display:none" onclick="nxt()">পরবর্তী প্রশ্ন →</button>
-  </div>
-</div>
-
-<!-- ══════════════════════════
+    <!-- ══════════════════════════
      SCREEN 3 — RESULT
 ══════════════════════════ -->
-<div id="screen-result" class="screen">
-  <div class="card">
-    <div class="res-hero">
-      <div class="sring-wrap">
-        <svg viewBox="0 0 120 120">
-          <circle class="srtrack" cx="60" cy="60" r="52"/>
-          <circle class="srfill" id="rr" cx="60" cy="60" r="52"
-                  stroke-dasharray="326.7" stroke-dashoffset="326.7"/>
-        </svg>
-        <div class="srcenter">
-          <div class="srbig" id="rscore">—</div>
-          <div class="srdenom">/ ৩০</div>
+    <div id="screen-result" class="screen">
+      <div class="card">
+        <div class="res-hero">
+          <div class="sring-wrap">
+            <svg viewBox="0 0 120 120">
+              <circle class="srtrack" cx="60" cy="60" r="52" />
+              <circle
+                class="srfill"
+                id="rr"
+                cx="60"
+                cy="60"
+                r="52"
+                stroke-dasharray="326.7"
+                stroke-dashoffset="326.7"
+              />
+            </svg>
+            <div class="srcenter">
+              <div class="srbig" id="rscore">—</div>
+              <div class="srdenom">/ ২৭</div>
+            </div>
+          </div>
+          <div class="res-pct" id="rpct">—%</div>
+          <div class="res-who" id="rwho">—</div>
         </div>
+
+        <div class="srow">
+          <div class="sbox">
+            <div class="sv" style="color: var(--green)" id="rok">—</div>
+            <div class="sl">সঠিক</div>
+          </div>
+          <div class="sbox">
+            <div class="sv" style="color: var(--red)" id="rng">—</div>
+            <div class="sl">ভুল</div>
+          </div>
+          <div class="sbox">
+            <div class="sv" style="color: var(--gold)" id="rav">—</div>
+            <div class="sl">গড় সময়</div>
+          </div>
+        </div>
+
+        <div class="div"></div>
+        <p style="font-size: 0.76rem; color: var(--muted); margin-bottom: 9px">
+          প্রতিটি প্রশ্নের বিবরণ:
+        </p>
+        <div id="al" class="al"></div>
+        <div id="substatus" class="ss"></div>
+        <button class="btn btn-g" onclick="location.reload()">
+          আবার কুইজ দিন ↺
+        </button>
       </div>
-      <div class="res-pct" id="rpct">—%</div>
-      <div class="res-who" id="rwho">—</div>
     </div>
 
-    <div class="srow">
-      <div class="sbox"><div class="sv" style="color:var(--green)" id="rok">—</div><div class="sl">সঠিক</div></div>
-      <div class="sbox"><div class="sv" style="color:var(--red)"   id="rng">—</div><div class="sl">ভুল</div></div>
-      <div class="sbox"><div class="sv" style="color:var(--gold)"  id="rav">—</div><div class="sl">গড় সময়</div></div>
-    </div>
+    <script>
+      // ── CONFIG — paste your Apps Script URL here ──────────────
+      const HARDCODED_URL = "";
+      // ──────────────────────────────────────────────────────────
 
-    <div class="div"></div>
-    <p style="font-size:.76rem;color:var(--muted);margin-bottom:9px">প্রতিটি প্রশ্নের বিবরণ:</p>
-    <div id="al" class="al"></div>
-    <div id="substatus" class="ss"></div>
-    <button class="btn btn-g" onclick="location.reload()">আবার কুইজ দিন ↺</button>
-  </div>
-</div>
+      const SK = "dai_quiz_url";
+      let SURL = HARDCODED_URL || localStorage.getItem(SK) || "";
+      const TOTAL = 27; // total number of questions
 
-<script>
-// ── CONFIG — paste your Apps Script URL here ──────────────
-const HARDCODED_URL = 'https://script.google.com/macros/s/AKfycbyRx6yA6Ha44CaaEqzMZH9x63nlKisSgpTA629fPKqelO8lObPBd5A30ZKEyGPFjCsa0w/exec';
-// ──────────────────────────────────────────────────────────
+      // ════════════════════════════════════════════════════════
+      //  QUESTION BANK  (27 questions)
+      // ════════════════════════════════════════════════════════
+      const QS = [
+        {
+          t: "fill",
+          q: "মুসলমানের সংজ্ঞা সম্পর্কিত কুরআনের আয়াতটি সূরা _____ এর _____ নম্বর আয়াত।",
+          blanks: 2,
+          labels: ["সূরার নাম", "আয়াত নম্বর"],
+          ans: ["নিসা", "৯৫"],
+        },
+        {
+          t: "mcq",
+          q: '"লা নবীয়া বাদী" হাদিসটি কোন ঘটনার প্রেক্ষাপটে বলা হয়েছিল?',
+          opts: [
+            "হুদাইবিয়ার সন্ধির সময়",
+            "বদর যুদ্ধের সময়",
+            "তাবূকের যুদ্ধের সময়",
+            "ওহোদ যুদ্ধের সময়",
+          ],
+          ans: 2,
+        },
+        {
+          t: "fill",
+          q: "হানাফী মাহযাবের প্রখ্যাত আলেম মোল্লা আলী কারী (রহ.) বলেছেন, কারো মধ্যে _____ টি কুফরির লক্ষণ থাকলেও যদি একটি বিপরীত লক্ষণ থাকে তাহলে তাকে কাফির বলা যাবে না।",
+          blanks: 1,
+          labels: ["সংখ্যা"],
+          ans: ["৯৯"],
+        },
+        {
+          t: "mcq",
+          q: '"ইন্নী মুতাওয়াফ্ফীকা" — এই আয়াংশের অর্থ কী?',
+          opts: [
+            "আমি তোমাকে আকাশে তুলে নেব",
+            "নিশ্চয় আমি তোমাকে মৃত্যু দেব",
+            "আমি তোমাকে পবিত্র করব",
+            "আমি তোমাকে বিজয় দেব",
+          ],
+          ans: 1,
+        },
+        {
+          t: "fill",
+          q: "হযরত মির্যা সাহেব (আ.)-এর মৃত্যুর আগের রাতে তাঁর জ্যেষ্ঠ কন্যা মোবারেক বেগম রুইয়ায় হযরত _____ -কে দেখেছিলেন।",
+          blanks: 1,
+          labels: ["নাম"],
+          ans: ["রসূলে করীম (সা.)"],
+        },
+        {
+          t: "mcq",
+          q: "বুখারীর কিতাবুল জানায়েযের হাদিস অনুযায়ী, কারা তাদের নবীদের কবরকে সেজদাগাহে পরিণত করেছে?",
+          opts: [
+            "মুশরিক ও মুনাফিক",
+            "ইহুদি ও খ্রিষ্টান",
+            "হিন্দু ও বৌদ্ধ",
+            "মুনাফিক ও কাফির",
+          ],
+          ans: 1,
+        },
+        {
+          t: "fill",
+          q: 'সূরা আলে ইমরান: ৫৬ আয়াতে "ওয়াও আতেফা" দ্বারা কয়টি ওয়াদা ধারাবাহিকভাবে একটির পর একটি পূর্ণ হবে? উত্তর: ______',
+          blanks: 1,
+          labels: ["বিশেষণ"],
+          ans: ["৪ টি"],
+        },
+        {
+          t: "fill",
+          q: 'কাফির আখ্যাদান প্রসঙ্গে হযরত মির্যা সাহেব (আ.) হাদিস উদ্ধৃত করেছেন: "যে মুসলমান অন্য মুসলমানকে কাফের বলে, প্রকৃতপক্ষে সে _____।"',
+          blanks: 1,
+          labels: ["উত্তর"],
+          ans: ["নিজেই কাফের"],
+        },
+        {
+          t: "mcq",
+          q: 'মুসলিম শরীফের হাদিসে "নবীউল্লাহ ঈসা" শব্দটি কতবার উল্লেখ হয়েছে?',
+          opts: ["২ বার", "৩ বার", "৪ বার", "৫ বার"],
+          ans: 2,
+        },
+        {
+          t: "fill",
+          q: "সূরা আল হাক্কাহর ৪৫-৪৮ আয়াত অনুযায়ী, কেউ আল্লাহর নামে মিথ্যা দাবি করলে আল্লাহ তার _____ কেটে দেবেন।",
+          blanks: 1,
+          labels: ["উত্তর"],
+          ans: ["জীবনশিরা"],
+        },
+        {
+          t: "mcq",
+          q: "ইমাম মাহ্দীর চন্দ্র-সূর্যগ্রহণের নিদর্শন সম্পর্কিত হাদিসটি কোন হাদিসগ্রন্থে আছে?",
+          opts: ["বুখারী", "মুসলিম", "দারকুতনী, কিতাবুল ঈদাইন", "তিরমিযি"],
+          ans: 2,
+        },
+        {
+          t: "mcq",
+          q: "হযরত মির্যা গোলাম আহমদ কাদিয়ানী (আ.)-এর বিরুদ্ধে প্রথমে কাফির ফতোয়া কারা দিয়েছিলেন?",
+          opts: [
+            "আহরারী জামাত",
+            "আর্যসমাজীরা",
+            "মৌলভী মুহাম্মদ হুসাইন বাটালভীসহ বিরোধীরা",
+            "বৃটিশ সরকার",
+          ],
+          ans: 2,
+        },
+        {
+          t: "fill",
+          q: "১৮৯৪ সালে পূর্ব গোলার্ধে এবং ১৮৯৫ সালে _____ গোলার্ধে দারকুতনীর হাদিসের নিদর্শন পূর্ণ হয়েছিল। ১৮৯৪ সাল ছিল _____ হিজরি।",
+          blanks: 2,
+          labels: ["গোলার্ধ", "হিজরি সাল"],
+          ans: ["পশ্চিম", "১৩১১"],
+        },
+        {
+          t: "mcq",
+          q: "হযরত মির্যা সাহেব (আ.) কি ধরনের নবুওয়তের দাবি করেছিলেন?",
+          opts: [
+            "স্বাধীন ও শরীয়তবাহী নবী",
+            "স্বতন্ত্র নতুন শরীয়তের নবী",
+            "মহানবী (সা.)-এর গোলামীতে উম্মতী নবী",
+            "পূর্ববর্তী নবীদের মতো স্বতন্ত্র নবী",
+          ],
+          ans: 2,
+        },
+        {
+          t: "fill",
+          q: "দেওবন্দ মাদ্রাসার প্রতিষ্ঠাতা মাওলানা মুহাম্মদ কাসেম _____ (রহ.) বলেছেন: মহানবী (সা.)-এর পরে নবী আবির্ভূত হলেও খাতেমিয়াতে কোনো পার্থক্য হবে না।",
+          blanks: 1,
+          labels: ["উপাধি"],
+          ans: ["নানুতবী"],
+        },
+        {
+          t: "fill",
+          q: 'হযরত মির্যা সাহেব (আ.) কিতাবুল বারীয়ায় "স্বরোপিত বৃক্ষ" বলতে আসলে তাঁর _____ বুঝিয়েছিলেন, জামাতকে নয়।',
+          blanks: 1,
+          labels: ["শব্দ"],
+          ans: ["খান্দান বা পরিবারকে"],
+        },
+        {
+          t: "mcq",
+          q: '"স্বপ্নে খোদা হয়ে যাওয়া" সংক্রান্ত তা\'বীর সম্পর্কে "তা\'তীরুল আনাম" পুস্তকে কী বলা আছে?',
+          opts: [
+            "এটি কুফরির আলামত",
+            "এটি মানসিক রোগের লক্ষণ",
+            "এটির তা'বীর হলো আল্লাহ তাকে সঠিক পথ দেখিয়েছেন",
+            "এটি একটি আজগুবি স্বপ্ন",
+          ],
+          ans: 2,
+        },
+        {
+          t: "fill",
+          q: '"খোদা হওয়ার দাবি" বিষয়ক আপত্তিতে বিরোধীরা হযরত মির্যা সাহেব (আ.)-এর _____ পুস্তক থেকে উদ্ধৃতি বিকৃত করে পেশ করেছে।',
+          blanks: 1,
+          labels: ["পুস্তকের নাম"],
+          ans: ["আয়নায়ে কামালতে ইসলাম"],
+        },
+        {
+          t: "mcq",
+          q: '"যে আমাদের মত নামায পড়ে, কিবলামুখী হয় এবং জবাইকৃত পশু খায় — সেই মুসলিম" — এটি কোন হাদিসগ্রন্থে?',
+          opts: ["মুসলিম", "তিরমিযি", "বুখারী, কিতাবুস সালাত", "আবু দাউদ"],
+          ans: 2,
+        },
+        {
+          t: "fill",
+          q: 'হযরত মির্যা সাহেব (আ.) তাঁর "আল ওসীয়্যত" পুস্তকে নিজের মৃত্যুর পর "কুদরতে সানীয়া" অর্থাৎ _____ আবির্ভাবের ভবিষ্যদ্বাণী করেছিলেন।',
+          blanks: 1,
+          labels: ["উত্তর"],
+          ans: ["খিলাফত"],
+        },
+        {
+          t: "mcq",
+          q: "হযরত মির্যা সাহেব (আ.) কত সালে এবং কোথায় মৃত্যুবরণ করেন?",
+          opts: [
+            "১৯০৫ সালে, কাদিয়ানে",
+            "১৯০৮ সালে, লাহোরে",
+            "১৯১০ সালে, দিল্লিতে",
+            "১৯০৬ সালে, অমৃতসরে",
+          ],
+          ans: 1,
+        },
+        {
+          t: "fill",
+          q: "বুখারী শরীফের কিতাবুল জানায়েযের রসুলুল্লাহ সাঃ এর মৃত্যু সংক্রান্ত হাদিসটি হযরত _____ (রা.)-এর বর্ণনায় রয়েছে।",
+          blanks: 1,
+          labels: ["রাবীর নাম"],
+          ans: ["আয়েশা"],
+        },
+        {
+          t: "mcq",
+          q: "দারকুতনীর হাদিস অনুযায়ী প্রতিশ্রুত মাহ্দীর সময়ে রমযান মাসে কোন দুটি ঘটনা ঘটবে?",
+          opts: [
+            "ভূমিকম্প ও বন্যা",
+            "চন্দ্রগ্রহণ ও সূর্যগ্রহণ",
+            "ঝড় ও মহামারী",
+            "যুদ্ধ ও দুর্ভিক্ষ",
+          ],
+          ans: 1,
+        },
+        {
+          t: "fill",
+          q: "সূরা নিসা: ৭০ আয়াতে নিয়ামতপ্রাপ্তদের চারটি শ্রেণির নাম হলো: নবী, _____, শহীদ এবং _____।",
+          blanks: 2,
+          labels: ["দ্বিতীয় শ্রেণি", "চতুর্থ শ্রেণি"],
+          ans: ["সিদ্দিক", "সালেহ"],
+        },
+        {
+          t: "mcq",
+          q: "হযরত মির্যা সাহেব (আ.) মৃত্যুর পূর্বে সর্বশেষ কোন পুস্তকটি রচনা করেছিলেন?",
+          opts: [
+            "হাকিকাতুল ওহী",
+            "আল ওসীয়্যত",
+            "পয়গামে সুলেহ",
+            "কিতাবুল বারীয়া",
+          ],
+          ans: 2,
+        },
+        {
+          t: "fill",
+          q: 'মহানবী (সা.) বলেছেন: "মান সাল্লা সালাতানা ওয়াসতাকবালা _____ ওয়া আকালা _____ ফা যালিকাল মুসলিমু।"',
+          blanks: 2,
+          labels: ["প্রথম শব্দ", "দ্বিতীয় শব্দ"],
+          ans: ["কিবলাতানা", "যাবিহাতানা"],
+        },
+        {
+          t: "fill",
+          q: 'হযরত মির্যা গোলাম আহমদ কাদিয়ানী (আ.) মৃত্যুর পূর্বে যে ইলহাম পেয়েছিলেন তা হলো: "আর রাহীলো, সুম্মার রাহীলো" — যার অর্থ: "_____, _____।"',
+          blanks: 2,
+          labels: ["প্রথম অর্থ", "দ্বিতীয় অর্থ"],
+          ans: ["যাত্রার সময় আগত", "যাত্রার সময় আগত"],
+        },
+      ];
 
-const SK   = 'dai_quiz_url';
-let SURL   = HARDCODED_URL || localStorage.getItem(SK) || '';
+      // ════════════════════════════════════════════════════════
+      //  STATE
+      // ════════════════════════════════════════════════════════
+      let P = {},
+        sessionId = "",
+        qi = 0,
+        score = 0,
+        answered = false,
+        startTs = 0,
+        timerInt = null,
+        timeLeft = 0,
+        log = [];
+      const CIRC = 2 * Math.PI * 19;
 
-// ════════════════════════════════════════════════════════
-//  QUESTION BANK  (30 questions)
-// ════════════════════════════════════════════════════════
-const QS=[
-{t:'fill',q:'মুসলমানের সংজ্ঞা সম্পর্কিত কুরআনের আয়াতটি সূরা _____ এর _____ নম্বর আয়াত।',blanks:2,labels:['সূরার নাম','আয়াত নম্বর'],ans:['নিসা','৯৫']},
-{t:'mcq',q:'"লা নবীয়া বাদী" হাদিসটি কোন ঘটনার প্রেক্ষাপটে বলা হয়েছিল?',opts:['হুদাইবিয়ার সন্ধির সময়','বদর যুদ্ধের সময়','তাবূকের যুদ্ধের সময়','ওহোদ যুদ্ধের সময়'],ans:2},
-{t:'fill',q:'মোল্লা আলী কারী (রহ.) বলেছেন, কারো মধ্যে _____ টি কুফরির লক্ষণ থাকলেও যদি একটি বিপরীত লক্ষণ থাকে তাহলে তাকে কাফির বলা যাবে না।',blanks:1,labels:['সংখ্যা'],ans:['৯৯']},
-{t:'mcq',q:'"ইন্নী মুতাওয়াফ্ফীকা" — এই আয়াংশের অর্থ কী?',opts:['আমি তোমাকে আকাশে তুলে নেব','নিশ্চয় আমি তোমাকে মৃত্যু দেব','আমি তোমাকে পবিত্র করব','আমি তোমাকে বিজয় দেব'],ans:1},
-{t:'fill',q:'হযরত মির্যা সাহেব (আ.)-এর মৃত্যুর আগের রাতে তাঁর জ্যেষ্ঠ কন্যা মোবারেক বেগম রুইয়ায় হযরত _____ (সা.)-কে দেখেছিলেন।',blanks:1,labels:['নাম'],ans:['রসূলে করীম']},
-{t:'mcq',q:'বুখারীর হাদিস অনুযায়ী, কারা তাদের নবীদের কবরকে সেজদাগাহে পরিণত করেছে?',opts:['মুশরিক ও মুনাফিক','ইহুদি ও খ্রিষ্টান','হিন্দু ও বৌদ্ধ','মুনাফিক ও কাফির'],ans:1},
-{t:'fill',q:'সূরা আলে ইমরান: ৫৬ আয়াতে "ওয়াও আতেফা" দ্বারা বোঝানো হয়েছে যে চারটি ওয়াদা _____ একটির পর একটি পূর্ণ হবে।',blanks:1,labels:['বিশেষণ'],ans:['ধারাবাহিকভাবে']},
-{t:'mcq',q:'মুসলিম শরীফের কিতাবুল ফিতানের কত নম্বর হাদিসে শেষ যুগের ঈসা (আ.)-কে "নবীউল্লাহ" বলা হয়েছে?',opts:['৭০০০','৭১০০','৭২৬৩','৭৫০০'],ans:2},
-{t:'fill',q:'কাফির আখ্যাদান প্রসঙ্গে হযরত মির্যা সাহেব (আ.) হাদিস উদ্ধৃত করেছেন: "যে মুসলমান অন্য মুসলমানকে কাফের বলে, প্রকৃতপক্ষে সে _____।"',blanks:1,labels:['উত্তর'],ans:['নিজেই কাফের']},
-{t:'mcq',q:'মুসলিম শরীফের হাদিসে "নবীউল্লাহ ঈসা" শব্দটি কতবার উল্লেখ হয়েছে?',opts:['২ বার','৩ বার','৪ বার','৫ বার'],ans:2},
-{t:'fill',q:'সূরা আল হাক্কাহর ৪৫-৪৮ আয়াত অনুযায়ী, কেউ আল্লাহর নামে মিথ্যা দাবি করলে আল্লাহ তার _____ কেটে দেবেন।',blanks:1,labels:['উত্তর'],ans:['জীবনশিরা']},
-{t:'mcq',q:'ইমাম মাহ্দীর নিদর্শন সম্পর্কিত হাদিসটি কোন হাদিসগ্রন্থে আছে?',opts:['বুখারী','মুসলিম','দারকুতনী, কিতাবুল ঈদাইন','তিরমিযি'],ans:2},
-{t:'fill',q:'হযরত মির্যা গোলাম আহমদ (আ.) নবুওয়তের দাবির পর ঠিক মহানবী (সা.)-এর মতো _____ বছর জীবিত ছিলেন।',blanks:1,labels:['সংখ্যা'],ans:['২৩']},
-{t:'mcq',q:'হযরত মির্যা সাহেব (আ.)-এর বিরুদ্ধে প্রথমে কাফির ফতোয়া কারা দিয়েছিলেন?',opts:['আহমদীয়া জামাত','মির্যা সাহেব নিজেই','মৌলভী মুহাম্মদ হুসাইন বাটালভীসহ বিরোধীরা','বৃটিশ সরকার'],ans:2},
-{t:'fill',q:'১৮৯৪ সালে _____ গোলার্ধে এবং ১৮৯৫ সালে _____ গোলার্ধে দারকুতনীর হাদিসের নিদর্শন পূর্ণ হয়েছিল।',blanks:2,labels:['১৮৯৪ সাল','১৮৯৫ সাল'],ans:['পূর্ব','পশ্চিম']},
-{t:'mcq',q:'হযরত মির্যা সাহেব (আ.) কি ধরনের নবুওয়তের দাবি করেছিলেন?',opts:['স্বাধীন ও শরীয়তবাহী নবী','স্বতন্ত্র নতুন শরীয়তের নবী','মহানবী (সা.)-এর গোলামীতে উম্মতী নবী','পূর্ববর্তী নবীদের মতো স্বতন্ত্র নবী'],ans:2},
-{t:'fill',q:'দেওবন্দ মাদ্রাসার প্রতিষ্ঠাতা মাওলানা মুহাম্মদ কাসেম _____ (রহ.) বলেছেন: মহানবী (সা.)-এর পরে নবী আবির্ভূত হলেও খাতেমিয়াতে কোনো পার্থক্য হবে না।',blanks:1,labels:['উপাধি'],ans:['নানুতবী']},
-{t:'mcq',q:'"বৃটিশ সরকারের রোপিত বৃক্ষ" — এই অভিযোগের উত্তরে হযরত মির্যা সাহেব (আ.) নিজের সম্পর্কে কী বলেছেন?',opts:['আমি ইংরেজ সরকারের রোপিত বৃক্ষ','আমি ঐ বৃক্ষ যাকে আল্লাহ স্বহস্তে রোপণ করেছেন','আমি কোনো সরকারের বৃক্ষ নই','আমার জামাত সরকারি পৃষ্ঠপোষকতায় গড়ে উঠেছে'],ans:1},
-{t:'fill',q:'হযরত মির্যা সাহেব (আ.) কিতাবুল বারীয়ায় "স্বরোপিত বৃক্ষ" বলতে আসলে তাঁর _____ বা পরিবারকে বুঝিয়েছিলেন, জামাতকে নয়।',blanks:1,labels:['শব্দ'],ans:['খান্দান']},
-{t:'mcq',q:'"স্বপ্নে খোদা হয়ে যাওয়া" সংক্রান্ত তা\'বীর সম্পর্কে "তা\'তীরুল আনাম" পুস্তকে কী বলা আছে?',opts:['এটি কুফরির আলামত','এটি মানসিক রোগের লক্ষণ','এটির তা\'বীর হলো আল্লাহ তাকে সঠিক পথ দেখিয়েছেন','এটি একটি ভয়াবহ স্বপ্ন'],ans:2},
-{t:'fill',q:'"খোদা হওয়ার দাবি" বিষয়ক আপত্তিতে বিরোধীরা হযরত মির্যা সাহেব (আ.)-এর _____ পুস্তক থেকে উদ্ধৃতি বিকৃত করে পেশ করেছে।',blanks:1,labels:['পুস্তকের নাম'],ans:['আয়নায়ে কামালতে ইসলাম']},
-{t:'mcq',q:'"যে আমাদের মত নামায পড়ে, কিবলামুখী হয় এবং জবাইকৃত পশু খায় — সেই মুসলিম" — এটি কোন হাদিসগ্রন্থে?',opts:['মুসলিম','তিরমিযি','বুখারী, কিতাবুস সালাত','আবু দাউদ'],ans:2},
-{t:'fill',q:'হযরত মির্যা সাহেব (আ.) তাঁর "আল ওসীয়্যত" পুস্তকে নিজের মৃত্যুর পর "কুদরতে সানীয়া" অর্থাৎ _____ আবির্ভাবের ভবিষ্যদ্বাণী করেছিলেন।',blanks:1,labels:['উত্তর'],ans:['খিলাফত']},
-{t:'mcq',q:'হযরত মির্যা সাহেব (আ.) কত সালে এবং কোথায় মৃত্যুবরণ করেন?',opts:['১৯০৫ সালে, কাদিয়ানে','১৯০৮ সালে, লাহোরে','১৯১০ সালে, দিল্লিতে','১৯০৬ সালে, অমৃতসরে'],ans:1},
-{t:'fill',q:'বুখারী শরীফের কিতাবুল জানায়েযের হাদিসটি হযরত _____ (রা.)-এর বর্ণনায় রয়েছে এবং হাদিস নম্বর _____।',blanks:2,labels:['রাবীর নাম','হাদিস নম্বর'],ans:['আয়েশা','১৩৩০']},
-{t:'mcq',q:'দারকুতনীর হাদিস অনুযায়ী প্রতিশ্রুত মাহ্দীর সময়ে রমযান মাসে কোন দুটি ঘটনা ঘটবে?',opts:['ভূমিকম্প ও বন্যা','চন্দ্রগ্রহণ ও সূর্যগ্রহণ','ঝড় ও মহামারী','যুদ্ধ ও দুর্ভিক্ষ'],ans:1},
-{t:'fill',q:'সূরা নিসা: ৭০ আয়াতে নিয়ামতপ্রাপ্তদের চারটি শ্রেণির নাম হলো: নবী, _____, শহীদ এবং _____।',blanks:2,labels:['দ্বিতীয় শ্রেণি','চতুর্থ শ্রেণি'],ans:['সিদ্দিক','সালেহ']},
-{t:'mcq',q:'হযরত মির্যা সাহেব (আ.) মৃত্যুর পূর্বে সর্বশেষ কোন পুস্তকটি রচনা করেছিলেন?',opts:['হাকিকাতুল ওহী','আল ওসীয়্যত','পয়গামে সুলেহ','কিতাবুল বারীয়া'],ans:2},
-{t:'fill',q:'মহানবী (সা.) বলেছেন: "মান সাল্লা সালাতানা ওয়াসতাকবালা _____ ওয়া আকালা _____ ফা যালিকাল মুসলিমু।"',blanks:2,labels:['প্রথম শব্দ','দ্বিতীয় শব্দ'],ans:['কিবলাতানা','যাবিহাতানা']},
-{t:'mcq',q:'হযরত মির্যা সাহেব (আ.)-এর মৃত্যুর পূর্বে আয়ু সম্পর্কে কোন ইলহামটি হয়েছিল?',opts:['তোমার মৃত্যু আসন্ন','তোমার আয়ু আশি বছরের কাছাকাছি','তুমি একশো বছর বাঁচবে','তোমাকে শীঘ্রই ফিরিয়ে নেব'],ans:1},
-{t:'fill',q:'হযরত মির্যা সাহেব (আ.) মৃত্যুর পূর্বে ইলহাম পেয়েছিলেন: "আর রাহীলো, সুম্মার রাহীলো" — যার অর্থ: "_____"।',blanks:1,labels:['অর্থ'],ans:['যাত্রার সময় আগত']},
-];
+      // ════════════════════════════════════════════════════════
+      //  INIT
+      // ════════════════════════════════════════════════════════
+      window.addEventListener("DOMContentLoaded", () => {
+        show(SURL ? "screen-reg" : "screen-setup");
+      });
 
-// ════════════════════════════════════════════════════════
-//  STATE
-// ════════════════════════════════════════════════════════
-let P={},sessionId='',qi=0,score=0,answered=false,startTs=0,timerInt=null,timeLeft=0,log=[];
-const CIRC=2*Math.PI*19;
+      // Save on tab switch / app background / browser close
+      document.addEventListener("visibilitychange", () => {
+        if (document.visibilityState === "hidden" && log.length > 0)
+          autoSave(false);
+      });
+      window.addEventListener("pagehide", () => {
+        if (log.length > 0) autoSave(false);
+      });
 
-// ════════════════════════════════════════════════════════
-//  INIT
-// ════════════════════════════════════════════════════════
-window.addEventListener('DOMContentLoaded',()=>{
-  show(SURL?'screen-reg':'screen-setup');
-});
+      // ════════════════════════════════════════════════════════
+      //  SETUP
+      // ════════════════════════════════════════════════════════
+      function saveUrl() {
+        const v = (document.getElementById("surl").value || "").trim();
+        if (v) {
+          localStorage.setItem(SK, v);
+          SURL = v;
+        }
+        show("screen-reg");
+      }
+      function goReg() {
+        show("screen-reg");
+      }
 
-// Save on tab switch / app background / browser close
-document.addEventListener('visibilitychange',()=>{
-  if(document.visibilityState==='hidden' && log.length>0) autoSave(false);
-});
-window.addEventListener('pagehide',()=>{
-  if(log.length>0) autoSave(false);
-});
+      // ════════════════════════════════════════════════════════
+      //  REGISTRATION
+      // ════════════════════════════════════════════════════════
+      function begin() {
+        const name = document.getElementById("rn").value.trim();
+        const maj = document.getElementById("rm").value.trim();
+        const wa = document.getElementById("rw").value.trim();
+        if (!name) {
+          shake("rn", "নাম লিখুন");
+          return;
+        }
+        if (!maj) {
+          shake("rm", "মজলিস লিখুন");
+          return;
+        }
+        if (!wa) {
+          shake("rw", "নম্বর লিখুন");
+          return;
+        }
+        P = { name, majlis: maj, wa };
+        // Unique session ID: timestamp + random
+        sessionId =
+          Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+        qi = 0;
+        score = 0;
+        log = [];
+        show("screen-q");
+        renderQ();
+      }
+      function shake(id, msg) {
+        const e = document.getElementById(id);
+        e.placeholder = msg;
+        e.classList.add("err");
+        e.focus();
+        setTimeout(() => e.classList.remove("err"), 2000);
+      }
 
-// ════════════════════════════════════════════════════════
-//  SETUP
-// ════════════════════════════════════════════════════════
-function saveUrl(){
-  const v=(document.getElementById('surl').value||'').trim();
-  if(v){localStorage.setItem(SK,v);SURL=v;}
-  show('screen-reg');
-}
-function goReg(){show('screen-reg');}
+      // ════════════════════════════════════════════════════════
+      //  AUTO-SAVE — called after EVERY answered question
+      // ════════════════════════════════════════════════════════
+      function autoSave(completed) {
+        if (!SURL) return;
+        setSaveDot("saving", "সংরক্ষণ হচ্ছে…");
+        const pct = completed
+          ? Math.round((score / TOTAL) * 100)
+          : Math.round((score / log.length) * 100);
+        const payload = {
+          sessionId,
+          name: P.name,
+          majlis: P.majlis,
+          whatsapp: P.wa,
+          score,
+          total: TOTAL,
+          percentage: pct,
+          answeredCount: log.length,
+          completed,
+          answers: log.map((r) => ({
+            given: r.given,
+            correct: r.correct,
+            timeTaken: r.timeTaken,
+          })),
+        };
+        fetch(SURL, {
+          method: "POST",
+          mode: "no-cors",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        })
+          .then(() => {
+            setSaveDot(
+              "saved",
+              completed
+                ? "সম্পন্ন ও সংরক্ষিত ✓"
+                : "সংরক্ষিত ✓ (" + log.length + "/" + TOTAL + ")",
+            );
+            setTimeout(() => setSaveDot("", ""), 3000);
+          })
+          .catch(() => {
+            setSaveDot("error", "সংরক্ষণে সমস্যা");
+            setTimeout(() => setSaveDot("", ""), 4000);
+          });
+      }
 
-// ════════════════════════════════════════════════════════
-//  REGISTRATION
-// ════════════════════════════════════════════════════════
-function begin(){
-  const name=document.getElementById('rn').value.trim();
-  const maj =document.getElementById('rm').value.trim();
-  const wa  =document.getElementById('rw').value.trim();
-  if(!name){shake('rn','নাম লিখুন');return;}
-  if(!maj) {shake('rm','মজলিস লিখুন');return;}
-  if(!wa)  {shake('rw','নম্বর লিখুন');return;}
-  P={name,majlis:maj,wa};
-  // Unique session ID: timestamp + random
-  sessionId = Date.now().toString(36) + Math.random().toString(36).slice(2,6);
-  qi=0;score=0;log=[];
-  show('screen-q');
-  renderQ();
-}
-function shake(id,msg){
-  const e=document.getElementById(id);
-  e.placeholder=msg;e.classList.add('err');e.focus();
-  setTimeout(()=>e.classList.remove('err'),2000);
-}
+      function setSaveDot(state, msg) {
+        const el = document.getElementById("save-dot");
+        el.className = "save-dot" + (state ? " " + state : "");
+        document.getElementById("save-txt").textContent = msg || "";
+      }
 
-// ════════════════════════════════════════════════════════
-//  AUTO-SAVE — called after EVERY answered question
-// ════════════════════════════════════════════════════════
-function autoSave(completed){
-  if(!SURL) return;
-  setSaveDot('saving','সংরক্ষণ হচ্ছে…');
-  const pct = completed ? Math.round((score/30)*100) : Math.round((score/log.length)*100);
-  const payload = {
-    sessionId,
-    name      : P.name,
-    majlis    : P.majlis,
-    whatsapp  : P.wa,
-    score,
-    total     : 30,
-    percentage: pct,
-    answeredCount: log.length,
-    completed,
-    answers   : log.map(r=>({given:r.given,correct:r.correct,timeTaken:r.timeTaken}))
-  };
-  fetch(SURL,{
-    method:'POST',mode:'no-cors',
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify(payload)
-  }).then(()=>{
-    setSaveDot('saved', completed ? 'সম্পন্ন ও সংরক্ষিত ✓' : 'সংরক্ষিত ✓ ('+log.length+'/30)');
-    setTimeout(()=>setSaveDot('',''),3000);
-  }).catch(()=>{
-    setSaveDot('error','সংরক্ষণে সমস্যা');
-    setTimeout(()=>setSaveDot('',''),4000);
-  });
-}
+      // ════════════════════════════════════════════════════════
+      //  RENDER QUESTION
+      // ════════════════════════════════════════════════════════
+      function renderQ() {
+        const q = QS[qi];
+        answered = false;
+        document.getElementById("pf").style.width = (qi / TOTAL) * 100 + "%";
+        document.getElementById("qc").textContent = qi + 1 + " / " + TOTAL;
+        document.getElementById("qq").textContent = q.q;
+        const fd = document.getElementById("fd");
+        fd.style.display = "none";
+        fd.className = "fb";
+        const nb = document.getElementById("nb");
+        nb.style.display = "none";
+        nb.textContent = qi < TOTAL - 1 ? "পরবর্তী প্রশ্ন →" : "ফলাফল দেখুন →";
 
-function setSaveDot(state, msg){
-  const el=document.getElementById('save-dot');
-  el.className='save-dot'+(state?' '+state:'');
-  document.getElementById('save-txt').textContent=msg||'';
-}
+        if (q.t === "mcq") {
+          document.getElementById("tb").textContent = "🔘 MCQ";
+          document.getElementById("tb").className = "tbadge bm";
+          buildMCQ(q);
+          document.getElementById("ma").style.display = "flex";
+          document.getElementById("fa").style.display = "none";
+          startTimer(20);
+        } else {
+          document.getElementById("tb").textContent = "✏️ শূন্যস্থান";
+          document.getElementById("tb").className = "tbadge bf";
+          buildFill(q);
+          document.getElementById("ma").style.display = "none";
+          document.getElementById("fa").style.display = "block";
+          startTimer(30);
+        }
+        startTs = Date.now();
+      }
 
-// ════════════════════════════════════════════════════════
-//  RENDER QUESTION
-// ════════════════════════════════════════════════════════
-function renderQ(){
-  const q=QS[qi];
-  answered=false;
-  document.getElementById('pf').style.width=((qi/30)*100)+'%';
-  document.getElementById('qc').textContent=(qi+1)+' / ৩০';
-  document.getElementById('qq').textContent=q.q;
-  const fd=document.getElementById('fd');
-  fd.style.display='none';fd.className='fb';
-  const nb=document.getElementById('nb');
-  nb.style.display='none';
-  nb.textContent=qi<29?'পরবর্তী প্রশ্ন →':'ফলাফল দেখুন →';
+      // ── MCQ ───────────────────────────────────────────────
+      function buildMCQ(q) {
+        const a = document.getElementById("ma");
+        a.innerHTML = "";
+        ["ক", "খ", "গ", "ঘ"].forEach((l, i) => {
+          const d = document.createElement("div");
+          d.className = "opt";
+          d.innerHTML = `<div class="ol">${l}</div><div>${q.opts[i]}</div>`;
+          d.addEventListener("click", () => pickMCQ(i, q));
+          d.addEventListener("mouseenter", () => {
+            if (!answered) d.classList.add("hl");
+          });
+          d.addEventListener("mouseleave", () => d.classList.remove("hl"));
+          a.appendChild(d);
+        });
+      }
+      function pickMCQ(chosen, q) {
+        if (answered) return;
+        answered = true;
+        clearInterval(timerInt);
+        const took = elap(),
+          ok = chosen === q.ans;
+        if (ok) score++;
+        log.push({
+          q: qi + 1,
+          type: "MCQ",
+          given: q.opts[chosen],
+          correctAns: q.opts[q.ans],
+          correct: ok,
+          timeTaken: took,
+        });
+        const opts = document.querySelectorAll(".opt");
+        opts.forEach((o) => o.classList.add("dis"));
+        opts[chosen].classList.add(ok ? "ok" : "ng");
+        if (!ok) opts[q.ans].classList.add("rv");
+        showFB(ok, q.opts[q.ans], false);
+        autoSave(false); // ← save immediately after answer
+      }
 
-  if(q.t==='mcq'){
-    document.getElementById('tb').textContent='🔘 MCQ';
-    document.getElementById('tb').className='tbadge bm';
-    buildMCQ(q);
-    document.getElementById('ma').style.display='flex';
-    document.getElementById('fa').style.display='none';
-    startTimer(20);
-  } else {
-    document.getElementById('tb').textContent='✏️ শূন্যস্থান';
-    document.getElementById('tb').className='tbadge bf';
-    buildFill(q);
-    document.getElementById('ma').style.display='none';
-    document.getElementById('fa').style.display='block';
-    startTimer(30);
-  }
-  startTs=Date.now();
-}
-
-// ── MCQ ───────────────────────────────────────────────
-function buildMCQ(q){
-  const a=document.getElementById('ma');a.innerHTML='';
-  ['ক','খ','গ','ঘ'].forEach((l,i)=>{
-    const d=document.createElement('div');
-    d.className='opt';
-    d.innerHTML=`<div class="ol">${l}</div><div>${q.opts[i]}</div>`;
-    d.addEventListener('click',()=>pickMCQ(i,q));
-    d.addEventListener('mouseenter',()=>{if(!answered)d.classList.add('hl');});
-    d.addEventListener('mouseleave',()=>d.classList.remove('hl'));
-    a.appendChild(d);
-  });
-}
-function pickMCQ(chosen,q){
-  if(answered)return;
-  answered=true;clearInterval(timerInt);
-  const took=elap(),ok=chosen===q.ans;
-  if(ok)score++;
-  log.push({q:qi+1,type:'MCQ',given:q.opts[chosen],correctAns:q.opts[q.ans],correct:ok,timeTaken:took});
-  const opts=document.querySelectorAll('.opt');
-  opts.forEach(o=>o.classList.add('dis'));
-  opts[chosen].classList.add(ok?'ok':'ng');
-  if(!ok)opts[q.ans].classList.add('rv');
-  showFB(ok,q.opts[q.ans],false);
-  autoSave(false);   // ← save immediately after answer
-}
-
-// ── Fill ──────────────────────────────────────────────
-function buildFill(q){
-  const w=document.getElementById('fr');w.innerHTML='';
-  for(let i=0;i<q.blanks;i++){
-    const r=document.createElement('div');r.className='frow';
-    r.innerHTML=`<label class="flbl">${q.labels[i]}</label>
+      // ── Fill ──────────────────────────────────────────────
+      function buildFill(q) {
+        const w = document.getElementById("fr");
+        w.innerHTML = "";
+        for (let i = 0; i < q.blanks; i++) {
+          const r = document.createElement("div");
+          r.className = "frow";
+          r.innerHTML = `<label class="flbl">${q.labels[i]}</label>
       <input class="finp" id="fi${i}" type="text" placeholder="এখানে লিখুন…" autocomplete="off">`;
-    w.appendChild(r);
-  }
-  document.getElementById('fb2').disabled=false;
-  setTimeout(()=>{const f=document.getElementById('fi0');if(f)f.focus();},120);
-  for(let i=0;i<q.blanks;i++){
-    setTimeout(()=>{
-      const inp=document.getElementById('fi'+i);
-      if(inp)inp.addEventListener('keydown',e=>{if(e.key==='Enter')subFill();});
-    },150);
-  }
-}
-function subFill(){
-  if(answered)return;
-  const q=QS[qi];const vals=[];
-  for(let i=0;i<q.blanks;i++)vals.push((document.getElementById('fi'+i)?.value||'').trim());
-  doFill(q,vals,false);
-}
-function doFill(q,vals,timedOut){
-  if(answered)return;
-  answered=true;clearInterval(timerInt);
-  const took=elap();
-  document.getElementById('fb2').disabled=true;
-  const norm=s=>s.toLowerCase().replace(/\s+/g,' ').replace(/[।,.]/g,'').trim();
-  let allOk=!timedOut;
-  if(!timedOut){
-    vals.forEach((v,i)=>{
-      const inp=document.getElementById('fi'+i);
-      if(inp)inp.disabled=true;
-      const ok=norm(v)===norm(q.ans[i])||norm(q.ans[i]).includes(norm(v))||norm(v).includes(norm(q.ans[i]));
-      if(inp)inp.classList.add(ok?'ok':'bad');
-      if(!ok)allOk=false;
-    });
-  } else {
-    for(let i=0;i<q.blanks;i++){const inp=document.getElementById('fi'+i);if(inp){inp.disabled=true;inp.classList.add('bad');}}
-  }
-  if(allOk)score++;
-  log.push({q:qi+1,type:'শূন্যস্থান',given:timedOut?'(সময় শেষ)':vals.join(' / '),correctAns:q.ans.join(' / '),correct:allOk,timeTaken:took});
-  showFB(allOk,q.ans.join(' / '),timedOut);
-  autoSave(false);   // ← save immediately after answer
-}
+          w.appendChild(r);
+        }
+        document.getElementById("fb2").disabled = false;
+        setTimeout(() => {
+          const f = document.getElementById("fi0");
+          if (f) f.focus();
+        }, 120);
+        for (let i = 0; i < q.blanks; i++) {
+          setTimeout(() => {
+            const inp = document.getElementById("fi" + i);
+            if (inp)
+              inp.addEventListener("keydown", (e) => {
+                if (e.key === "Enter") subFill();
+              });
+          }, 150);
+        }
+      }
+      function subFill() {
+        if (answered) return;
+        const q = QS[qi];
+        const vals = [];
+        for (let i = 0; i < q.blanks; i++)
+          vals.push((document.getElementById("fi" + i)?.value || "").trim());
+        doFill(q, vals, false);
+      }
+      function doFill(q, vals, timedOut) {
+        if (answered) return;
+        answered = true;
+        clearInterval(timerInt);
+        const took = elap();
+        document.getElementById("fb2").disabled = true;
+        const norm = (s) =>
+          s.toLowerCase().replace(/\s+/g, " ").replace(/[।,.]/g, "").trim();
+        let allOk = !timedOut;
+        if (!timedOut) {
+          vals.forEach((v, i) => {
+            const inp = document.getElementById("fi" + i);
+            if (inp) inp.disabled = true;
+            const ok =
+              norm(v) === norm(q.ans[i]) ||
+              norm(q.ans[i]).includes(norm(v)) ||
+              norm(v).includes(norm(q.ans[i]));
+            if (inp) inp.classList.add(ok ? "ok" : "bad");
+            if (!ok) allOk = false;
+          });
+        } else {
+          for (let i = 0; i < q.blanks; i++) {
+            const inp = document.getElementById("fi" + i);
+            if (inp) {
+              inp.disabled = true;
+              inp.classList.add("bad");
+            }
+          }
+        }
+        if (allOk) score++;
+        log.push({
+          q: qi + 1,
+          type: "শূন্যস্থান",
+          given: timedOut ? "(সময় শেষ)" : vals.join(" / "),
+          correctAns: q.ans.join(" / "),
+          correct: allOk,
+          timeTaken: took,
+        });
+        showFB(allOk, q.ans.join(" / "), timedOut);
+        autoSave(false); // ← save immediately after answer
+      }
 
-// ── Timer ─────────────────────────────────────────────
-function startTimer(s){
-  clearInterval(timerInt);timeLeft=s;tick(s,s);
-  timerInt=setInterval(()=>{timeLeft--;tick(timeLeft,s);if(timeLeft<=0){clearInterval(timerInt);if(!answered)onTO();}},1000);
-}
-function tick(l,t){
-  const r=document.getElementById('tr');
-  r.style.strokeDashoffset=CIRC*(1-l/t);
-  r.style.stroke=l<=5?'var(--red)':l<=10?'var(--gold)':'var(--teal)';
-  document.getElementById('tn').textContent=l;
-  document.getElementById('ts').textContent=l;
-}
-function onTO(){
-  const q=QS[qi];
-  if(q.t==='mcq'){
-    answered=true;
-    log.push({q:qi+1,type:'MCQ',given:'(সময় শেষ)',correctAns:q.opts[q.ans],correct:false,timeTaken:elap()});
-    document.querySelectorAll('.opt').forEach(o=>o.classList.add('dis'));
-    document.querySelectorAll('.opt')[q.ans].classList.add('rv');
-    showFB(false,q.opts[q.ans],true);
-    autoSave(false);
-  } else {
-    const vals=[];
-    for(let i=0;i<QS[qi].blanks;i++)vals.push((document.getElementById('fi'+i)?.value||'').trim());
-    doFill(QS[qi],vals,true);
-  }
-}
-function elap(){return Math.min(Math.round((Date.now()-startTs)/1000),99);}
+      // ── Timer ─────────────────────────────────────────────
+      function startTimer(s) {
+        clearInterval(timerInt);
+        timeLeft = s;
+        tick(s, s);
+        timerInt = setInterval(() => {
+          timeLeft--;
+          tick(timeLeft, s);
+          if (timeLeft <= 0) {
+            clearInterval(timerInt);
+            if (!answered) onTO();
+          }
+        }, 1000);
+      }
+      function tick(l, t) {
+        const r = document.getElementById("tr");
+        r.style.strokeDashoffset = CIRC * (1 - l / t);
+        r.style.stroke =
+          l <= 5 ? "var(--red)" : l <= 10 ? "var(--gold)" : "var(--teal)";
+        document.getElementById("tn").textContent = l;
+        document.getElementById("ts").textContent = l;
+      }
+      function onTO() {
+        const q = QS[qi];
+        if (q.t === "mcq") {
+          answered = true;
+          log.push({
+            q: qi + 1,
+            type: "MCQ",
+            given: "(সময় শেষ)",
+            correctAns: q.opts[q.ans],
+            correct: false,
+            timeTaken: elap(),
+          });
+          document
+            .querySelectorAll(".opt")
+            .forEach((o) => o.classList.add("dis"));
+          document.querySelectorAll(".opt")[q.ans].classList.add("rv");
+          showFB(false, q.opts[q.ans], true);
+          autoSave(false);
+        } else {
+          const vals = [];
+          for (let i = 0; i < QS[qi].blanks; i++)
+            vals.push((document.getElementById("fi" + i)?.value || "").trim());
+          doFill(QS[qi], vals, true);
+        }
+      }
+      function elap() {
+        return Math.min(Math.round((Date.now() - startTs) / 1000), 99);
+      }
 
-// ── Feedback ──────────────────────────────────────────
-function showFB(ok,ca,to){
-  const fd=document.getElementById('fd');
-  if(to){fd.className='fb ft';fd.innerHTML=`<div class="fbi">⏱️</div>সময় শেষ!<div class="fba">সঠিক উত্তর: ${ca}</div>`;}
-  else if(ok){fd.className='fb fc';fd.innerHTML=`<div class="fbi">✅</div>চমৎকার! উত্তর সঠিক।`;}
-  else{fd.className='fb fw';fd.innerHTML=`<div class="fbi">❌</div>উত্তরটি সঠিক হয়নি।<div class="fba">সঠিক উত্তর: ${ca}</div>`;}
-  fd.style.display='block';
-  document.getElementById('nb').style.display='block';
-  setTimeout(()=>fd.scrollIntoView({behavior:'smooth',block:'nearest'}),80);
-}
+      // ── Feedback ──────────────────────────────────────────
+      function showFB(ok, ca, to) {
+        const fd = document.getElementById("fd");
+        if (to) {
+          fd.className = "fb ft";
+          fd.innerHTML = `<div class="fbi">⏱️</div>সময় শেষ!<div class="fba">সঠিক উত্তর: ${ca}</div>`;
+        } else if (ok) {
+          fd.className = "fb fc";
+          fd.innerHTML = `<div class="fbi">✅</div>চমৎকার! উত্তর সঠিক।`;
+        } else {
+          fd.className = "fb fw";
+          fd.innerHTML = `<div class="fbi">❌</div>উত্তরটি সঠিক হয়নি।<div class="fba">সঠিক উত্তর: ${ca}</div>`;
+        }
+        fd.style.display = "block";
+        document.getElementById("nb").style.display = "block";
+        setTimeout(
+          () => fd.scrollIntoView({ behavior: "smooth", block: "nearest" }),
+          80,
+        );
+      }
 
-// ── Navigation ────────────────────────────────────────
-function nxt(){qi++;if(qi>=30)showResult();else renderQ();}
+      // ── Navigation ────────────────────────────────────────
+      function nxt() {
+        qi++;
+        if (qi >= TOTAL) showResult();
+        else renderQ();
+      }
 
-// ════════════════════════════════════════════════════════
-//  RESULTS
-// ════════════════════════════════════════════════════════
-function showResult(){
-  // Final save with completed=true
-  autoSave(true);
-  show('screen-result');
-  const pct=Math.round((score/30)*100);
-  const avg=Math.round(log.reduce((s,r)=>s+r.timeTaken,0)/log.length);
-  setTimeout(()=>{document.getElementById('rr').style.strokeDashoffset=326.7*(1-pct/100);},200);
-  document.getElementById('rscore').textContent=score;
-  document.getElementById('rpct').textContent=pct+'%';
-  document.getElementById('rwho').textContent=P.name+' · '+P.majlis;
-  document.getElementById('rok').textContent=score;
-  document.getElementById('rng').textContent=30-score;
-  document.getElementById('rav').textContent=avg+'s';
+      // ════════════════════════════════════════════════════════
+      //  RESULTS
+      // ════════════════════════════════════════════════════════
+      function showResult() {
+        // Final save with completed=true
+        autoSave(true);
+        show("screen-result");
+        const pct = Math.round((score / TOTAL) * 100);
+        const avg = Math.round(
+          log.reduce((s, r) => s + r.timeTaken, 0) / log.length,
+        );
+        setTimeout(() => {
+          document.getElementById("rr").style.strokeDashoffset =
+            326.7 * (1 - pct / 100);
+        }, 200);
+        document.getElementById("rscore").textContent = score;
+        document.getElementById("rpct").textContent = pct + "%";
+        document.getElementById("rwho").textContent = P.name + " · " + P.majlis;
+        document.getElementById("rok").textContent = score;
+        document.getElementById("rng").textContent = TOTAL - score;
+        document.getElementById("rav").textContent = avg + "s";
 
-  const al=document.getElementById('al');al.innerHTML='';
-  log.forEach(r=>{
-    const d=document.createElement('div');d.className='ai';
-    d.innerHTML=`<div class="an">${r.q}</div>
+        const al = document.getElementById("al");
+        al.innerHTML = "";
+        log.forEach((r) => {
+          const d = document.createElement("div");
+          d.className = "ai";
+          d.innerHTML = `<div class="an">${r.q}</div>
     <div class="ab">
-      <span class="atp ${r.correct?'aok':'afl'}">${r.correct?'✓ সঠিক':'✗ ভুল'}</span>
+      <span class="atp ${r.correct ? "aok" : "afl"}">${r.correct ? "✓ সঠিক" : "✗ ভুল"}</span>
       <span class="atp" style="background:rgba(255,255,255,.05);color:var(--muted);margin-left:3px">${r.type}</span><br>
       <span style="color:var(--muted)">আপনার: </span>${r.given}<br>
-      ${!r.correct?`<span class="acv">সঠিক: ${r.correctAns}</span><br>`:''}
+      ${!r.correct ? `<span class="acv">সঠিক: ${r.correctAns}</span><br>` : ""}
       <span class="atm">⏱ ${r.timeTaken}s</span>
     </div>`;
-    al.appendChild(d);
-  });
+          al.appendChild(d);
+        });
 
-  // Show final sheet status on result screen too
-  if(!SURL){
-    const el=document.getElementById('substatus');
-    el.style.display='block';el.className='ss ss-f';
-    el.textContent='⚠️ Script URL নেই। ফলাফল সংরক্ষিত হয়নি।';
-  }
-}
+        // Show final sheet status on result screen too
+        if (!SURL) {
+          const el = document.getElementById("substatus");
+          el.style.display = "block";
+          el.className = "ss ss-f";
+          el.textContent = "⚠️ Script URL নেই। ফলাফল সংরক্ষিত হয়নি।";
+        }
+      }
 
-// ── Util ──────────────────────────────────────────────
-function show(id){
-  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-  window.scrollTo(0,0);
-}
-</script>
-</body>
+      // ── Util ──────────────────────────────────────────────
+      function show(id) {
+        document
+          .querySelectorAll(".screen")
+          .forEach((s) => s.classList.remove("active"));
+        document.getElementById(id).classList.add("active");
+        window.scrollTo(0, 0);
+      }
+    </script>
+  </body>
 </html>
